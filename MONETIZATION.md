@@ -1111,6 +1111,10 @@ Aspirian's monetization strategy is based on the following principle:
 # 52. Document Status
 
 **File:** `MONETIZATION.md`
+**Phase:** A
+**Module:** A6 — Monetization Strategy
+
+**File:** `MONETIZATION.md`
 **Version:** 1.0
 **Status:** Monetization Strategy
 **Academic Range:** Nursery → Class 12

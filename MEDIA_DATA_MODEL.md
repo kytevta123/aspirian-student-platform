@@ -1713,6 +1713,10 @@ AI Personalization
 # 96. Document Status
 
 **File:** `MEDIA_DATA_MODEL.md`
+**Phase:** C
+**Module:** C7 — Media Data Model
+
+**File:** `MEDIA_DATA_MODEL.md`
 **Version:** 1.0
 **Status:** Final Media Data Model Blueprint
 **Academic Range:** Nursery → Class 12

@@ -2449,6 +2449,10 @@ The Aspirian data model must remain:
 # 103. Document Status
 
 **File:** `DATA_MODEL.md`
+**Phase:** C
+**Module:** C0 — Complete Domain & Data Model (Master Overview)
+
+**File:** `DATA_MODEL.md`
 **Version:** 1.0
 **Status:** Final Data Model Blueprint
 **Academic Range:** Nursery → Class 12

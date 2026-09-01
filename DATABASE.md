@@ -1873,6 +1873,10 @@ Existing data must be protected during migrations.
 
 # 65. Database Status
 
+**File:** `DATABASE.md`
+**Phase:** B
+**Module:** B8 — Database Architecture
+
 **Version:** 1.0
 **Status:** Initial Master Database Blueprint
 

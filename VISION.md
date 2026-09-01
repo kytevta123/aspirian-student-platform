@@ -702,3 +702,13 @@ The first version does not need every feature.
 But the architecture must be designed so that future capabilities can be added without rebuilding the entire platform.
 
 > **Aspirian is not just a website. It is a long-term educational technology platform.**
+
+---
+
+# 29. Document Status
+
+**File:** `VISION.md`
+**Version:** 1.0
+**Phase:** A
+**Module:** A2 — Product Vision
+

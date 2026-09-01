@@ -1357,6 +1357,10 @@ This allows:
 
 # 59. AI Architecture Status
 
+**File:** `AI_ARCHITECTURE.md`
+**Phase:** B
+**Module:** B3 — AI Architecture
+
 **Version:** 1.0
 **Status:** Technical Design Blueprint
 

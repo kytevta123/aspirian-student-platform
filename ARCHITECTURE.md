@@ -1445,6 +1445,10 @@ At this stage, the preferred architecture is:
 
 # 62. Architecture Status
 
+**File:** `ARCHITECTURE.md`
+**Phase:** B
+**Module:** B1 — System Architecture
+
 **Version:** 1.0
 
 **Status:** Initial Architecture Blueprint

@@ -2077,6 +2077,10 @@ Assessments should reference reusable Question Bank content while preserving suf
 # 114. Document Status
 
 **File:** `ASSESSMENT_MODEL.md`
+**Phase:** C
+**Module:** C4 — Assessment Model
+
+**File:** `ASSESSMENT_MODEL.md`
 **Version:** 1.0
 **Status:** Final Assessment Data Model Blueprint
 **Academic Range:** Nursery → Class 12

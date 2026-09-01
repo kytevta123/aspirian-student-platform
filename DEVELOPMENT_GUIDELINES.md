@@ -1544,6 +1544,10 @@ Do not modify code simply because an AI tool suggests a change.
 
 # 87. Document Status
 
+**File:** `DEVELOPMENT_GUIDELINES.md`
+**Phase:** B
+**Module:** B4 — Development Guidelines
+
 **Version:** 1.0
 **Status:** Technical Design Blueprint
 

@@ -1383,6 +1383,10 @@ Analytics
 # 53. Document Status
 
 **File:** `PRODUCT_ROADMAP.md`
+**Phase:** A
+**Module:** A4 — Product Roadmap
+
+**File:** `PRODUCT_ROADMAP.md`
 **Version:** 1.0
 **Status:** Product Roadmap
 **Academic Scope:** Nursery → Class 12

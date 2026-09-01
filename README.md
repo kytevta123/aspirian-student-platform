@@ -1201,3 +1201,13 @@ All within the Aspirian ecosystem.
 ---
 
 > **Aspirian — Helping Students Learn Smarter, Practice Better, and Achieve More.**
+
+---
+
+# 1. Document Status
+
+**File:** `README.md`
+**Version:** 1.0
+**Phase:** A
+**Module:** A1 — Project Foundation
+

@@ -1691,6 +1691,10 @@ Release
 
 # 95. Testing Status
 
+**File:** `TESTING.md`
+**Phase:** B
+**Module:** B6 — Testing Strategy
+
 **Version:** 1.0
 **Status:** Technical Design Blueprint
 

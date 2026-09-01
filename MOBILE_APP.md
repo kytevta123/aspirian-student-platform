@@ -1,6 +1,5 @@
 # ASPIRIAN STUDENT PLATFORM — MOBILE APP
 
-**File:** `J1_MOBILE_APP.md`
 **Version:** 1.0
 **Phase:** J — Engineering Foundation
 **Status:** Final Technical Specification
@@ -1933,7 +1932,6 @@ git push origin main
 
 # 140. Final Status
 
-**File:** `J1_MOBILE_APP.md`
 **Phase:** J — Engineering Foundation
 **Status:** COMPLETE
 **Version:** 1.0

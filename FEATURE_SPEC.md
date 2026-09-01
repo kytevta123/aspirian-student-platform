@@ -1415,6 +1415,10 @@ The system will gradually evolve from a core student testing platform into a com
 # 66. Document Status
 
 **File:** `FEATURE_SPEC.md`
+**Phase:** A
+**Module:** A5 — Feature Specification
+
+**File:** `FEATURE_SPEC.md`
 **Version:** 1.0
 **Status:** Feature Specification
 **Academic Range:** Nursery → Class 12

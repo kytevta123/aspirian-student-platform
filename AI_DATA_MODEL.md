@@ -1917,6 +1917,10 @@ The AI layer must remain connected to trusted academic structures while maintain
 # 100. Document Status
 
 **File:** `AI_DATA_MODEL.md`
+**Phase:** C
+**Module:** C6 — AI Data Model
+
+**File:** `AI_DATA_MODEL.md`
 **Version:** 1.0
 **Status:** Final AI-Related Learning Data Model Blueprint
 **Academic Range:** Nursery → Class 12

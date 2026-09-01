@@ -1369,6 +1369,10 @@ has been properly implemented.
 
 # 72. API Status
 
+**File:** `API.md`
+**Phase:** B
+**Module:** B2 — API Design
+
 **Version:** 1.0
 **Status:** Initial API Blueprint
 

@@ -1259,6 +1259,10 @@ Before launch:
 
 # 73. Security Status
 
+**File:** `SECURITY.md`
+**Phase:** B
+**Module:** B5 — Security Architecture
+
 **Version:** 1.0
 **Status:** Technical Design Blueprint
 

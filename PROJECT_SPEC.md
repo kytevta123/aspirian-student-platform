@@ -1458,6 +1458,10 @@ The platform will ultimately be successful if it can:
 
 # 63. Specification Status
 
+**File:** `PROJECT_SPEC.md`
+**Phase:** A
+**Module:** A3 — Product Requirements
+
 **Version:** 1.0
 **Status:** Initial Master Specification
 **Scope:** Nursery–12
@@ -1467,4 +1471,3 @@ The platform will ultimately be successful if it can:
 This specification is the functional foundation for the technical architecture and database design.
 
 Future changes should be documented and versioned rather than silently changing established requirements.
-git 

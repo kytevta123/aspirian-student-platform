@@ -2202,6 +2202,10 @@ Analytics should transform platform activity into useful information while prese
 # 132. Document Status
 
 **File:** `ANALYTICS_DATA_MODEL.md`
+**Phase:** C
+**Module:** C8 — Analytics Data Model
+
+**File:** `ANALYTICS_DATA_MODEL.md`
 **Version:** 1.0
 **Status:** Final Analytics & Reporting Data Model Blueprint
 **Academic Range:** Nursery → Class 12

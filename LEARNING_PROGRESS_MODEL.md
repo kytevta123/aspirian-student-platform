@@ -1852,6 +1852,10 @@ This ensures that Aspirian can eventually provide meaningful personalized learni
 # 92. Document Status
 
 **File:** `LEARNING_PROGRESS_MODEL.md`
+**Phase:** C
+**Module:** C5 — Learning Progress Model
+
+**File:** `LEARNING_PROGRESS_MODEL.md`
 **Version:** 1.0
 **Status:** Final Learning Progress Data Model Blueprint
 **Academic Range:** Nursery → Class 12

@@ -1587,6 +1587,10 @@ The core identity remains independent from academic placement, school membership
 # 79. Document Status
 
 **File:** `USER_DATA_MODEL.md`
+**Phase:** C
+**Module:** C2 — User Data Model
+
+**File:** `USER_DATA_MODEL.md`
 **Version:** 1.0
 **Status:** Final User Data Model Blueprint
 **Academic Range:** Nursery → Class 12

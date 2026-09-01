@@ -1901,6 +1901,10 @@ The question should exist as a reusable academic asset, while tests and student 
 # 99. Document Status
 
 **File:** `QUESTION_BANK_MODEL.md`
+**Phase:** C
+**Module:** C3 — Question Bank Model
+
+**File:** `QUESTION_BANK_MODEL.md`
 **Version:** 1.0
 **Status:** Final Question Bank Data Model Blueprint
 **Academic Range:** Nursery → Class 12

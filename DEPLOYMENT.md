@@ -1380,6 +1380,10 @@ Update this document when there are significant changes to:
 
 # 79. Document Status
 
+**File:** `DEPLOYMENT.md`
+**Phase:** B
+**Module:** B7 — Deployment Architecture
+
 **Version:** 1.0
 **Status:** Technical Design Blueprint
 
