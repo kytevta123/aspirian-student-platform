@@ -1785,7 +1785,7 @@ Every major feature must be tested on real devices before production release.
 Mobile implementation must remain aligned with:
 
 ```text
-J1_MOBILE_APP.md
+MOBILE_APP.md
 ```
 
 and the broader Aspirian architecture.
@@ -1855,7 +1855,7 @@ Mobile source code must remain inside the main version-control strategy.
 Example:
 
 ```bash
-git add J1_MOBILE_APP.md
+git add MOBILE_APP.md
 git commit -m "docs: add mobile app architecture"
 git push origin main
 ```
