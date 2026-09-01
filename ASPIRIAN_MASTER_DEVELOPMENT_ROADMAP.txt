@@ -29,8 +29,8 @@ Changes are allowed only when a genuine technical, security,
 scalability, business, or implementation requirement is identified and
 the impact is reviewed and documented.
 
-========================================================= 1. MASTER
-DEVELOPMENT PRINCIPLE
+========================================================= 
+1. MASTER DEVELOPMENT PRINCIPLE
 =========================================================
 
 The project must be developed in small, verified increments.
@@ -46,8 +46,8 @@ Platform.”
 
 Instead, give Copilot one controlled task at a time.
 
-========================================================= 2.
-SOURCE-OF-TRUTH DOCUMENTATION
+========================================================= 
+2. SOURCE-OF-TRUTH DOCUMENTATION
 =========================================================
 
 The following project documentation must be preserved and used as the
@@ -70,8 +70,9 @@ PUSH_NOTIFICATIONS.md MOBILE_API.md
 Rule: If implementation conflicts with documentation, stop and review
 the conflict. Do not silently invent a new architecture.
 
-========================================================= 3. DEVELOPMENT
-PHASE ORDER =========================================================
+========================================================= 
+3. DEVELOPMENT PHASE ORDER 
+=========================================================
 
 The overall project roadmap is:
 
