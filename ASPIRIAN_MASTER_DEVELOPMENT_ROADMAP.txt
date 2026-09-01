@@ -1,0 +1,1056 @@
+ASPIRIAN STUDENT PLATFORM — MASTER DEVELOPMENT ROADMAP
+
+File: ASPIRIAN_MASTER_DEVELOPMENT_ROADMAP.txt Version: 1.0 Status: FINAL
+DEVELOPMENT CONTROL DOCUMENT Project: Aspirian Student Platform Website:
+aspirian.pk Application: app.aspirian.pk
+
+PURPOSE
+
+This document is the permanent master roadmap for the actual development
+of the Aspirian Student Platform.
+
+It is intended to remain as a standalone record outside the ChatGPT
+conversation. It defines the development order, workflow, task execution
+method, Git workflow, Copilot workflow, testing rules, deployment
+process, and project completion path.
+
+The existing project documentation remains the primary source of truth
+for architecture and module specifications. This document controls HOW
+development is executed.
+
+IMPORTANT PROJECT RULE
+
+Do not rebuild or redesign the complete architecture during
+implementation.
+
+The approved documentation must be treated as the baseline.
+
+Changes are allowed only when a genuine technical, security,
+scalability, business, or implementation requirement is identified and
+the impact is reviewed and documented.
+
+========================================================= 1. MASTER
+DEVELOPMENT PRINCIPLE
+=========================================================
+
+The project must be developed in small, verified increments.
+
+OFFICIAL FLOW:
+
+Documentation | v Development Roadmap | v Milestone | v Sprint | v Task
+| v Copilot Plan | v Implementation | v Testing | v Review | v Git
+Commit | v Git Push | v Changelog | v Next Task
+
+Never give Copilot the instruction: “Build the entire Aspirian Student
+Platform.”
+
+Instead, give Copilot one controlled task at a time.
+
+========================================================= 2.
+SOURCE-OF-TRUTH DOCUMENTATION
+=========================================================
+
+The following project documentation must be preserved and used as the
+development reference:
+
+ARCHITECTURE.md PROJECT_SPEC.md DATABASE.md CHANGELOG.md
+
+Phase/module documentation: All approved Phase 0 through Phase L
+documentation.
+
+Development control documentation: DEVELOPMENT_ROADMAP.md MILESTONES.md
+SPRINT_PLAN.md TASKS.md
+
+Infrastructure and deployment documentation: CI_CD.md SERVER_SETUP.md
+MONITORING.md BACKUP_RECOVERY.md DISASTER_RECOVERY.md SCALING.md
+
+Mobile documentation: MOBILE_APP.md ANDROID_APP.md IOS_APP.md
+PUSH_NOTIFICATIONS.md MOBILE_API.md
+
+Rule: If implementation conflicts with documentation, stop and review
+the conflict. Do not silently invent a new architecture.
+
+========================================================= 3. DEVELOPMENT
+PHASE ORDER =========================================================
+
+The overall project roadmap is:
+
+PHASE 0 — FOUNDATION & ARCHITECTURE PHASE A — CORE PLATFORM PHASE B —
+AUTHENTICATION & USER SYSTEM PHASE C — STUDENT LEARNING SYSTEM PHASE D —
+PRACTICE & ASSESSMENT PHASE E — MEDIA & ENGAGEMENT PHASE F — ARTIFICIAL
+INTELLIGENCE PHASE G — ADMINISTRATION PHASE H — MONETIZATION PHASE I —
+WORDPRESS INTEGRATION PHASE J — MOBILE PLATFORM PHASE K — INFRASTRUCTURE
+& DEVOPS PHASE L — FINAL DEVELOPMENT PREPARATION
+
+IMPORTANT: The documentation phases are the approved product/module
+roadmap. During implementation, exact task order may change where
+technical dependencies require it, but such changes must be documented.
+
+========================================================= 4. PRACTICAL
+IMPLEMENTATION ORDER
+=========================================================
+
+Actual coding should normally follow this dependency-oriented order:
+
+1.  Repository and development environment
+2.  Laravel/application foundation
+3.  Database connection and migrations
+4.  Core configuration
+5.  Authentication
+6.  Authorization and roles
+7.  Core educational data
+8.  Student system
+9.  Question bank
+10. Test engine
+11. Result engine
+12. Learning progress
+13. Revision engine
+14. Teacher system
+15. School system
+16. Admin system
+17. Reporting
+18. Practice modules
+19. Flashcards
+20. Writing practice
+21. Viva
+22. Practicals
+23. AI foundation
+24. AI Tutor
+25. AI Question Generator
+26. AI Paper Generator
+27. AI Revision Engine
+28. AI Viva
+29. AI Audio/Video learning
+30. Notifications
+31. Media systems
+32. Gamification
+33. Payment system
+34. Subscriptions
+35. Premium features
+36. AdSense/revenue architecture
+37. WordPress integration
+38. Mobile API
+39. Android application
+40. iOS application
+41. Security hardening
+42. Performance optimization
+43. Monitoring
+44. Backup/recovery
+45. CI/CD
+46. QA and regression testing
+47. Staging
+48. Production deployment
+49. Post-launch monitoring and improvement
+
+This order is a practical implementation sequence, not a replacement for
+the approved architecture.
+
+========================================================= 5. DEVELOPMENT
+ENVIRONMENT =========================================================
+
+PRIMARY DEVELOPMENT TOOLS:
+
+-   VS Code
+-   Git
+-   GitHub
+-   GitHub Copilot
+-   PHP
+-   Composer
+-   Laravel
+-   Node.js / NPM
+-   MariaDB / MySQL-compatible database
+-   Browser developer tools
+-   Testing tools appropriate to the stack
+
+LOCAL DEVELOPMENT GOAL:
+
+The developer must be able to:
+
+-   Clone the repository
+-   Install dependencies
+-   Configure environment
+-   Connect database
+-   Run the application
+-   Run tests
+-   Make a change
+-   Commit the change
+-   Push the change
+
+========================================================= 6. GITHUB
+COPILOT STRATEGY
+=========================================================
+
+Copilot is a coding assistant.
+
+Copilot is NOT the project architect.
+
+The architecture, module boundaries, security rules, and development
+order come from the approved project documentation.
+
+Copilot should be used for:
+
+-   Code generation
+-   Code completion
+-   Refactoring
+-   Test generation
+-   Error investigation
+-   Debugging assistance
+-   Documentation assistance
+-   Small implementation tasks
+
+Copilot should NOT independently:
+
+-   Redesign the entire system
+-   Change architecture without approval
+-   Delete unrelated files
+-   Rewrite large sections unnecessarily
+-   Introduce random packages
+-   Change database structure without checking documentation
+-   Change API contracts without review
+-   Expose secrets
+-   Commit credentials or API keys
+
+========================================================= 7. COPILOT
+TASK WORKFLOW =========================================================
+
+For every significant task:
+
+STEP 1 Select one task from TASKS.md.
+
+STEP 2 Read the relevant documentation.
+
+STEP 3 Ask Copilot to inspect the existing implementation.
+
+STEP 4 Ask Copilot for an implementation plan BEFORE coding when the
+task is non-trivial.
+
+STEP 5 Review the proposed plan.
+
+STEP 6 Approve implementation.
+
+STEP 7 Implement only the selected task.
+
+STEP 8 Run relevant tests.
+
+STEP 9 Fix problems.
+
+STEP 10 Run tests again.
+
+STEP 11 Review changed files.
+
+STEP 12 Commit to Git.
+
+STEP 13 Push to GitHub.
+
+STEP 14 Update CHANGELOG.md when the change is significant.
+
+STEP 15 Move to the next task.
+
+========================================================= 8. STANDARD
+COPILOT CONTEXT PROMPT
+=========================================================
+
+Use a prompt similar to this for major tasks:
+
+“We are developing the Aspirian Student Platform.
+
+Use the existing project documentation as the source of truth.
+
+Relevant documentation: - ARCHITECTURE.md - PROJECT_SPEC.md -
+DATABASE.md - DEVELOPMENT_ROADMAP.md - MILESTONES.md - SPRINT_PLAN.md -
+TASKS.md
+
+Current task: [TASK ID] — [TASK NAME]
+
+Before coding: 1. Inspect the current project structure. 2. Check
+relevant existing implementations. 3. Identify dependencies. 4. Do not
+redesign the architecture. 5. Do not modify unrelated files. 6. Identify
+required database/API/security changes. 7. Provide an implementation
+plan.
+
+Wait for approval before implementing a non-trivial task.”
+
+========================================================= 9. STANDARD
+IMPLEMENTATION PROMPT
+=========================================================
+
+After the plan is reviewed:
+
+“Proceed with the approved implementation for [TASK ID].
+
+Rules: - Follow the existing architecture. - Modify only required
+files. - Do not introduce unnecessary dependencies. - Follow existing
+coding conventions. - Protect existing functionality. - Add or update
+tests where required. - Do not change unrelated modules.
+
+After implementation: 1. List changed files. 2. Explain important
+changes. 3. Run relevant tests. 4. Report test results. 5. Report any
+remaining issues. 6. Do not start the next task automatically.”
+
+========================================================= 10. SMALL TASK
+PROMPT =========================================================
+
+For a simple task:
+
+“Implement [TASK ID] — [TASK NAME].
+
+First inspect the existing implementation.
+
+Follow the approved project documentation.
+
+Make only the changes required for this task.
+
+Do not redesign unrelated areas.
+
+After implementation, run the relevant test(s) and report: - Files
+changed - What was implemented - Tests run - Test result - Any remaining
+issue.”
+
+========================================================= 11. TASK
+EXECUTION RULE =========================================================
+
+One task should be considered complete only when it is VERIFIED.
+
+TASK LIFECYCLE:
+
+TODO | v IN PROGRESS | v TESTING | v REVIEW | v DONE
+
+If a task cannot proceed:
+
+BLOCKED
+
+A blocked task must record the reason.
+
+========================================================= 12. DEFINITION
+OF DONE =========================================================
+
+A task is DONE when:
+
+-   Implementation is complete
+-   Relevant validation is complete
+-   Relevant tests pass
+-   Security has been considered
+-   No critical error remains
+-   Changed files are reviewed
+-   Documentation is updated where required
+-   Git commit is created
+-   GitHub push is completed
+
+A feature is DONE only when its required tasks are DONE.
+
+========================================================= 13. GIT
+WORKFLOW =========================================================
+
+Recommended workflow:
+
+Task | v Feature branch | v Development | v Testing | v Commit | v Push
+| v Review | v Merge
+
+Branch examples:
+
+feature/authentication feature/student-dashboard feature/question-bank
+feature/test-engine feature/result-engine feature/ai-tutor
+feature/mobile-api feature/android-app feature/ios-app
+
+========================================================= 14. GIT COMMIT
+RULES =========================================================
+
+Commits should be:
+
+-   Meaningful
+-   Focused
+-   Related to a task
+-   Easy to understand
+-   Free from secrets
+
+Examples:
+
+“Implement user registration” “Implement user login” “Add question
+duplicate detection” “Implement test submission” “Add student dashboard”
+“Add mobile API authentication”
+
+Avoid vague commits such as:
+
+“changes” “update” “fix stuff” “final”
+
+========================================================= 15. GIT SAFETY
+=========================================================
+
+NEVER commit:
+
+-   Passwords
+-   API keys
+-   Database credentials
+-   Private tokens
+-   Production secrets
+-   .env files containing secrets
+-   Private certificates unless specifically required and protected
+
+Use environment variables and secret management.
+
+Before every push, check:
+
+-   Git status
+-   Changed files
+-   Sensitive files
+-   Diff where appropriate
+
+========================================================= 16. DATABASE
+DEVELOPMENT RULES
+=========================================================
+
+Database changes must be controlled.
+
+Before a major database change:
+
+1.  Review DATABASE.md.
+2.  Review relationships.
+3.  Check existing migrations.
+4.  Create proper migration.
+5.  Test migration.
+6.  Verify constraints.
+7.  Verify indexes.
+8.  Test rollback strategy where applicable.
+9.  Run application tests.
+
+Never casually edit production database structures manually.
+
+========================================================= 17. API
+DEVELOPMENT RULES
+=========================================================
+
+Before changing an API:
+
+-   Check existing API contract
+-   Check web clients
+-   Check mobile clients
+-   Check authentication
+-   Check authorization
+-   Check validation
+-   Check response format
+-   Check versioning requirements
+-   Update API documentation
+-   Run regression tests
+
+Breaking API changes must be explicitly documented.
+
+========================================================= 18.
+SECURITY-FIRST DEVELOPMENT
+=========================================================
+
+Security must be considered during development, not after the entire
+platform is finished.
+
+Important controls include:
+
+-   Authentication
+-   Authorization
+-   Password hashing
+-   Session/token security
+-   Input validation
+-   Output validation
+-   CSRF protection
+-   XSS protection
+-   SQL injection prevention
+-   Rate limiting
+-   File upload validation
+-   Access control
+-   Secure headers
+-   Secret management
+-   Audit logging where required
+
+Security issues receive high priority.
+
+========================================================= 19. TESTING
+STRATEGY =========================================================
+
+Testing must happen continuously.
+
+TEST FLOW:
+
+Code | v Unit Test | v Feature Test | v Integration Test | v Regression
+Test | v UAT | v Production Smoke Test
+
+Testing categories:
+
+-   Unit testing
+-   Feature testing
+-   API testing
+-   Integration testing
+-   Security testing
+-   Performance testing
+-   Regression testing
+-   User acceptance testing
+
+========================================================= 20. ERROR
+HANDLING WORKFLOW
+=========================================================
+
+When an error occurs:
+
+1.  Capture exact error.
+2.  Identify affected task.
+3.  Reproduce error.
+4.  Inspect logs.
+5.  Determine root cause.
+6.  Fix only the required area.
+7.  Run relevant tests.
+8.  Run regression tests if necessary.
+9.  Verify again.
+10. Commit the fix.
+
+Do not repeatedly ask Copilot to “try random fixes.”
+
+========================================================= 21. AI
+DEVELOPMENT RULES
+=========================================================
+
+AI features must be implemented in a controlled manner.
+
+AI systems must consider:
+
+-   Educational context
+-   Input validation
+-   Output validation
+-   Safety
+-   Rate limits
+-   Usage limits
+-   Cost control
+-   Logging
+-   Duplicate prevention
+-   Privacy
+-   Access control
+
+AI-generated content must not automatically be treated as correct
+educational content without the appropriate validation workflow.
+
+========================================================= 22. QUESTION
+BANK RULES =========================================================
+
+Question management must support:
+
+-   MCQs
+-   Short questions
+-   Long questions
+-   Subject
+-   Chapter
+-   Topic
+-   Difficulty
+-   Marks
+-   Answer
+-   Explanation
+-   Metadata
+
+Duplicate prevention should be maintained.
+
+AI-generated questions must also pass appropriate duplicate and
+validation checks.
+
+========================================================= 23. STUDENT
+SYSTEM RULES =========================================================
+
+Student features should maintain consistency between:
+
+-   Profile
+-   Subjects
+-   Chapters
+-   Topics
+-   Tests
+-   Results
+-   Progress
+-   Revision
+-   Practice
+-   Notifications
+-   AI recommendations
+
+Student data must be protected by authorization rules.
+
+========================================================= 24. TEST
+ENGINE RULES =========================================================
+
+Test implementation must correctly handle:
+
+-   Test availability
+-   Attempt creation
+-   Timer
+-   Question loading
+-   Answer saving
+-   Submission
+-   Auto-submit
+-   Duplicate submission prevention
+-   Scoring
+-   Result generation
+
+Server-side validation must be used for important timing and scoring
+rules.
+
+========================================================= 25. MOBILE
+DEVELOPMENT RULES
+=========================================================
+
+Mobile applications depend on the Mobile API.
+
+Recommended dependency:
+
+Backend/API | v Mobile API | +—- Android | +—- iOS
+
+Mobile development must verify:
+
+-   Authentication
+-   API compatibility
+-   Network errors
+-   Offline/poor network behavior where applicable
+-   Notifications
+-   Deep links where required
+-   Secure token handling
+-   Version compatibility
+
+========================================================= 26. PAYMENT
+DEVELOPMENT RULES
+=========================================================
+
+Payment implementation must verify:
+
+-   Secure configuration
+-   Server-side verification
+-   Transaction integrity
+-   Webhook validation
+-   Subscription status
+-   Failed payments
+-   Duplicate events
+-   Auditability
+
+Never trust payment status solely from client-side input.
+
+========================================================= 27.
+PERFORMANCE DEVELOPMENT
+=========================================================
+
+Performance should be considered from the beginning.
+
+Important areas:
+
+-   Database queries
+-   Indexes
+-   Pagination
+-   Caching
+-   Queues
+-   Background jobs
+-   API response times
+-   File storage
+-   Media delivery
+-   Concurrent users
+
+Optimization should be based on evidence such as logs, profiling, or
+load tests.
+
+========================================================= 28. CI/CD
+DEVELOPMENT =========================================================
+
+The CI/CD pipeline should progressively provide:
+
+-   Dependency installation
+-   Automated tests
+-   Code validation
+-   Build validation
+-   Deployment
+-   Migration handling
+-   Health checks
+-   Rollback strategy
+
+A deployment should not be considered successful until the application
+health is verified.
+
+========================================================= 29. MONITORING
+=========================================================
+
+Production monitoring should cover:
+
+-   Application errors
+-   Exceptions
+-   Server health
+-   CPU
+-   RAM
+-   Disk
+-   Network
+-   Database health
+-   Slow queries
+-   Queue health
+-   Uptime
+-   Critical alerts
+
+========================================================= 30. BACKUP AND
+RECOVERY =========================================================
+
+Backups should cover:
+
+-   Database
+-   Important application data
+-   Media/files where required
+-   Configuration information where appropriate
+
+Backups must be:
+
+-   Scheduled
+-   Retained
+-   Monitored
+-   Verified
+
+A backup is not considered reliable until restoration has been tested.
+
+========================================================= 31. DISASTER
+RECOVERY =========================================================
+
+Prepare recovery procedures for:
+
+-   Server failure
+-   Database failure
+-   Storage failure
+-   Application failure
+-   Security incident
+-   Deployment failure
+
+Recovery should be tested before a serious production incident occurs.
+
+========================================================= 32. STAGING
+ENVIRONMENT =========================================================
+
+Before production:
+
+Development | v Testing | v Staging | v Production
+
+Staging should be used to verify:
+
+-   Deployment
+-   Database migrations
+-   Authentication
+-   Student workflow
+-   Test workflow
+-   Result workflow
+-   API
+-   Notifications
+-   Critical integrations
+
+========================================================= 33. PRODUCTION
+DEPLOYMENT =========================================================
+
+Production release checklist:
+
+[ ] Code reviewed [ ] Tests passed [ ] Database migration reviewed [ ]
+Backup verified [ ] Environment variables verified [ ] SSL verified [ ]
+Monitoring active [ ] Queue workers active [ ] Storage verified [ ]
+Health checks ready [ ] Rollback plan ready [ ] Smoke test plan ready
+
+========================================================= 34. RELEASE
+WORKFLOW =========================================================
+
+Recommended release flow:
+
+Development | v Feature complete | v Testing | v Code review | v Staging
+| v UAT | v Production | v Smoke test | v Monitoring
+
+========================================================= 35. CHANGELOG
+RULE =========================================================
+
+CHANGELOG.md must be updated for significant changes.
+
+Record:
+
+-   New features
+-   Changes
+-   Bug fixes
+-   Security fixes
+-   API changes
+-   Database changes
+-   Performance improvements
+-   Infrastructure changes
+-   Mobile releases
+-   Production releases
+
+========================================================= 36. MILESTONE
+COMPLETION =========================================================
+
+A milestone is complete when:
+
+-   Required tasks are complete
+-   Required tests pass
+-   Dependencies are verified
+-   Documentation is updated
+-   No critical blocker remains
+-   Git history is clean enough for the milestone
+-   The milestone deliverable is verified
+
+========================================================= 37. SPRINT
+WORKFLOW =========================================================
+
+Each sprint should have:
+
+-   Sprint goal
+-   Selected tasks
+-   Dependencies
+-   Expected deliverables
+-   Testing requirements
+-   Review
+-   Completion decision
+
+SPRINT FLOW:
+
+Plan | v Develop | v Test | v Review | v Complete | v Next Sprint
+
+========================================================= 38. TASK
+PRIORITY =========================================================
+
+P0 — Critical P1 — High P2 — Medium P3 — Low
+
+Priority should consider:
+
+-   Security
+-   Dependency
+-   Core functionality
+-   User impact
+-   Production risk
+-   Business importance
+
+========================================================= 39. TASK
+BLOCKING =========================================================
+
+A task becomes BLOCKED when:
+
+-   Required dependency is incomplete
+-   Environment is unavailable
+-   External service is unavailable
+-   Critical technical issue exists
+-   Security issue prevents safe implementation
+
+Do not mark a blocked task as DONE.
+
+========================================================= 40.
+DEVELOPMENT DISCIPLINE
+=========================================================
+
+Rules:
+
+1.  Do not rush large features.
+2.  Do not change unrelated files.
+3.  Do not bypass tests.
+4.  Do not commit secrets.
+5.  Do not skip database review.
+6.  Do not change API contracts casually.
+7.  Do not let Copilot make architectural decisions automatically.
+8.  Keep commits understandable.
+9.  Keep documentation synchronized.
+10. Keep the project recoverable through Git.
+
+========================================================= 41. WHEN
+COPILOT PRODUCES BAD CODE
+=========================================================
+
+If Copilot creates incorrect code:
+
+1.  Do not blindly accept it.
+2.  Review the code.
+3.  Compare it with documentation.
+4.  Run tests.
+5.  Identify the exact issue.
+6.  Give Copilot the specific error/context.
+7.  Fix the smallest required area.
+8.  Test again.
+
+If Copilot repeatedly proposes an incorrect architecture, stop and
+review the task before continuing.
+
+========================================================= 42.
+DEVELOPMENT SESSION ROUTINE
+=========================================================
+
+At the beginning of a development session:
+
+1.  Check Git status.
+2.  Pull latest changes where appropriate.
+3.  Identify current task.
+4.  Read relevant documentation.
+5.  Confirm dependencies.
+6.  Plan implementation.
+
+During development:
+
+1.  Make focused changes.
+2.  Test frequently.
+3.  Review diffs.
+4.  Avoid unrelated modifications.
+
+At the end:
+
+1.  Run tests.
+2.  Review Git diff.
+3.  Commit.
+4.  Push.
+5.  Record important changes.
+6.  Note the next task.
+
+========================================================= 43. PROJECT
+CHECKPOINTS =========================================================
+
+Create reliable checkpoints after:
+
+-   Foundation completion
+-   Authentication completion
+-   Core database completion
+-   Student system completion
+-   Question bank completion
+-   Test engine completion
+-   Result engine completion
+-   AI foundation completion
+-   Admin completion
+-   Monetization completion
+-   Mobile API completion
+-   Mobile application milestones
+-   Infrastructure completion
+-   Staging completion
+-   Production launch
+
+========================================================= 44. RECOVERY
+PRINCIPLE =========================================================
+
+If development becomes unstable:
+
+STOP.
+
+Do not keep adding code.
+
+Use:
+
+Git history + Tests + Documentation + Logs + Last known good checkpoint
+
+to return to a stable state.
+
+========================================================= 45. FUTURE
+CHATGPT CONTINUATION
+=========================================================
+
+If a future ChatGPT conversation does not remember the project context,
+provide:
+
+1.  ASPIRIAN_MASTER_DEVELOPMENT_ROADMAP.txt
+2.  Relevant project documentation
+3.  Current Git status
+4.  Current task ID
+5.  Latest error/output if applicable
+
+Then instruct:
+
+“Continue Aspirian Student Platform development from the current task
+according to the attached master development roadmap and existing
+project documentation. Do not redesign the architecture.”
+
+This document is specifically intended to make project continuation
+possible even when previous conversation context is unavailable.
+
+========================================================= 46.
+DEVELOPMENT PROGRESS RECORD
+=========================================================
+
+Maintain the current position using:
+
+CURRENT PHASE: [Update during development]
+
+CURRENT MILESTONE: [Update during development]
+
+CURRENT SPRINT: [Update during development]
+
+CURRENT TASK: [Update during development]
+
+LAST COMPLETED TASK: [Update during development]
+
+NEXT TASK: [Update during development]
+
+CURRENT BRANCH: [Update during development]
+
+LAST VERIFIED COMMIT: [Update during development]
+
+CURRENT BLOCKERS: [Update during development]
+
+========================================================= 47. PROJECT
+COMPLETION DEFINITION
+=========================================================
+
+The Aspirian Student Platform should be considered ready for full
+production only after:
+
+-   Core platform is implemented
+-   Authentication is secure
+-   Authorization works
+-   Educational content structure works
+-   Question bank works
+-   Test engine works
+-   Result engine works
+-   Learning and revision work
+-   Teacher system works
+-   School system works
+-   Admin system works
+-   Required AI modules work
+-   Required media modules work
+-   Notifications work
+-   Monetization works where enabled
+-   Mobile API works
+-   Required mobile applications work
+-   Security review is complete
+-   Performance is acceptable
+-   Monitoring is active
+-   Backups are verified
+-   Disaster recovery is documented/tested
+-   CI/CD is operational
+-   QA is complete
+-   Staging is verified
+-   Production deployment is verified
+
+========================================================= 48. FINAL
+MASTER FLOW =========================================================
+
+THE COMPLETE DEVELOPMENT JOURNEY:
+
+MASTER DOCUMENTATION | v DEVELOPMENT ROADMAP | v MILESTONES | v SPRINT
+PLAN | v TASKS | v VS CODE | v GITHUB COPILOT | v IMPLEMENTATION | v
+TESTING | v REVIEW | v GIT COMMIT | v GIT PUSH | v CHANGELOG | v STAGING
+| v PRODUCTION | v MONITORING | v CONTINUOUS IMPROVEMENT
+
+========================================================= 49. FINAL
+PROJECT RULE =========================================================
+
+The goal is not to finish the project as quickly as possible.
+
+The goal is to build a stable, secure, maintainable, scalable, and
+properly documented educational platform.
+
+QUALITY > SPEED
+
+STABILITY > SHORTCUTS
+
+VERIFICATION > ASSUMPTION
+
+DOCUMENTATION > MEMORY
+
+CONTROLLED DEVELOPMENT > RANDOM AI GENERATION
+
+========================================================= 50. CURRENT
+STATUS =========================================================
+
+PLANNING & DOCUMENTATION: COMPLETE
+
+PHASE 0 — L DOCUMENTATION: COMPLETE
+
+NEXT STAGE: ACTUAL SOFTWARE DEVELOPMENT
+
+DEVELOPMENT METHOD: VS CODE + GITHUB + GIT + GITHUB COPILOT + EXISTING
+DOCUMENTATION
+
+COPILOT PLAN: FREE PLAN FIRST
+
+PAID COPILOT: NOT REQUIRED AT THE START
+
+FIRST DEVELOPMENT ACTION: VERIFY LOCAL DEVELOPMENT ENVIRONMENT AND BEGIN
+THE FIRST APPROVED DEVELOPMENT TASK.
+
+========================================================= END OF
+ASPIRIAN MASTER DEVELOPMENT ROADMAP
+=========================================================
