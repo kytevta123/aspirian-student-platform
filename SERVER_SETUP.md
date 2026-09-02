@@ -494,11 +494,13 @@ Changing an existing production encryption key without understanding its impact 
 
 The platform requires a reliable relational database.
 
-Possible database technology:
+The current approved database technology is:
 
-- MySQL
-- MariaDB
-- PostgreSQL
+- MariaDB 10.6.5
+
+The database server must be configured and maintained according to the requirements of the Laravel 12 application.
+
+---
 
 The final database engine must match the approved application architecture.
 

@@ -2,7 +2,7 @@
 
 **Version:** 1.0
 **Status:** Initial Database Blueprint
-**Database:** PostgreSQL
+**Database:** MariaDB 10.6.5
 **Project:** Aspirian Student Platform
 **Academic Range:** Nursery to Class 12
 
@@ -81,17 +81,13 @@ test_attempts
 
 # 4. Primary Key Strategy
 
-The preferred primary key strategy is:
+The database blueprint may use UUIDs where appropriate at the conceptual architecture level. However, the current Laravel 12 implementation uses BIGINT UNSIGNED primary and foreign keys where required by the existing application schema.
 
-**UUID**
+The existing users.id is a BIGINT UNSIGNED primary key. Related tables must therefore use compatible BIGINT UNSIGNED foreign keys.
 
-Example:
+Primary key types must remain consistent across related tables and must be compatible with the actual Laravel 12 and MariaDB 10.6.5 implementation.
 
-```text
-id UUID PRIMARY KEY
-```
-
-UUIDs reduce predictable sequential identifiers and are suitable for distributed systems and future integrations.
+UUIDs are not mandatory for the current implementation and must not be introduced where they would conflict with the existing database schema.
 
 ---
 
@@ -1511,7 +1507,9 @@ visibility
 created_at
 ```
 
-Actual large files should be stored in object storage rather than PostgreSQL.
+Actual large files should be stored in object storage rather than the MariaDB database.
+
+MariaDB should store the file metadata and object storage reference, while the actual file content should remain in object storage.
 
 ---
 

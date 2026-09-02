@@ -2355,15 +2355,16 @@ Permissions
 
 The mobile application must never connect directly to:
 
-```text
-MySQL
 
-MariaDB
-
-PostgreSQL
+MariaDB 10.6.5
 
 Other Production Databases
-```
+
+
+
+All mobile application data access must go through the secure Laravel API.
+
+The mobile application must never access database credentials or establish a direct database connection.
 
 ---
 

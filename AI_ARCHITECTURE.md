@@ -59,37 +59,76 @@ AI-generated educational material should be:
 
 # 3. High-Level AI Architecture
 
-```text
+
                          Student / Teacher
+
                                 │
+
                                 ▼
+
                          Aspirian App
+
                                 │
+
                                 ▼
+
                             API Layer
+
                                 │
+
                                 ▼
+
                          AI Orchestrator
+
                                 │
+
               ┌─────────────────┼─────────────────┐
+
               │                 │                 │
+
               ▼                 ▼                 ▼
+
         AI Tutor Engine    Generation Engine   Learning Engine
+
               │                 │                 │
+
               └─────────────────┼─────────────────┘
+
                                 │
-                    ┌───────────┼───────────┐
-                    │           │           │
-                    ▼           ▼           ▼
-                Knowledge     Student     AI Models
-                  Layer        Data
-                    │
-                    ▼
-               PostgreSQL
-                    │
-                    ▼
-              Vector Search
-```
+
+                   ┌────────────┼────────────┐
+
+                   │            │            │
+
+                   ▼            ▼            ▼
+
+              Knowledge      Student      AI Models
+
+                 Layer         Data
+
+                   │            │
+
+                   └──────┬─────┘
+
+                          │
+
+                          ▼
+
+                    MariaDB 10.6.5
+
+                          │
+
+                          ▼
+
+                 Search / Retrieval Layer
+
+                          │
+
+                          ▼
+
+                Vector Search Infrastructure
+
+
 
 ---
 
@@ -303,7 +342,7 @@ LLM
 Answer
 ```
 
-Vector search may use PostgreSQL-compatible vector infrastructure.
+Vector search may use a dedicated vector search solution or compatible search infrastructure when required.
 
 ---
 

@@ -210,55 +210,81 @@ Important architectural decisions should be documented before implementation.
 
 ---
 
-# 6. Recommended Technology Direction
+**# 6. Recommended Technology Direction**
 
-The exact technology stack will be finalized before implementation begins.
+The technology stack for the Aspirian Student Platform is based on the current approved implementation direction.
 
-The initial recommended direction is:
+The current technology direction is:
 
-```text id="q5wxed"
+```text
 Frontend
+
     ↓
+
 React / Next.js
 
 Backend
+
     ↓
-Laravel / PHP
+
+Laravel 12 / PHP
 
 Database
+
     ↓
-PostgreSQL
+
+MariaDB 10.6.5
 
 Cache / Queue
+
     ↓
+
 Redis
 
 Search
+
     ↓
-PostgreSQL Search initially
+
+MariaDB Search initially
+
     ↓
+
 Dedicated Search Engine later if required
 
 Storage
+
     ↓
+
 S3-Compatible Object Storage
 
 AI
+
     ↓
+
 Provider-Agnostic AI Service Layer
 
 Authentication
+
     ↓
+
 Backend-managed Authentication
 
 Deployment
+
     ↓
+
 Linux VPS / Cloud Infrastructure
+
 ```
 
-Technology choices must be validated against actual project requirements before final implementation.
+Technology choices must remain aligned with the actual application implementation and approved architecture decisions.
 
----
+The current primary application stack is **Laravel 12 / PHP with MariaDB 10.6.5**.
+
+Any future change to the primary database or core technology stack must be reviewed and formally approved before implementation.
+
+**---**
+
 
 # 7. Frontend Architecture
 
@@ -396,36 +422,49 @@ This should happen only when justified by scale or operational requirements.
 
 ---
 
-# 12. Database Architecture
+**## 12. Database Architecture**
 
-The primary database will store structured application data.
+The Aspirian Student Platform uses a relational database architecture based on **MariaDB 10.6.5**.
 
-Major domains:
+The database architecture must support:
 
-```text id="6xkt1j"
-Users
-Academic Structure
-Content
-Knowledge
-Questions
-Tests
-Attempts
-Results
-Learning Profiles
-Revision
-Analytics
-Media
-Subscriptions
-Schools
-Notifications
-Audit Logs
-```
+* Academic structure
+* User and identity management
+* Student profiles
+* Teachers and parents
+* Schools
+* Educational content
+* Question bank
+* Tests and assessments
+* Results and performance
+* Learning progress
+* Revision
+* AI-related data
+* Media metadata
+* Notifications
+* Subscriptions and payments
+* Audit and system records
 
-Database design will be documented separately in:
+**### Database Principles**
 
-**`DATABASE.md`**
+The implementation must follow:
 
----
+* Normalized relational design
+* Foreign key integrity
+* Appropriate indexes
+* Unique constraints
+* Referential integrity
+* Soft deletion where historical preservation is required
+* Timestamped records
+* Scalable relationships
+* Secure data access
+* Laravel migration compatibility
+* MariaDB 10.6.5 compatibility
+
+The database schema must be implemented incrementally according to the approved development roadmap rather than creating all future tables at once.
+
+**---**
+
 
 # 13. Academic Data Model
 
@@ -1394,54 +1433,91 @@ Important technology and architecture decisions should be documented.
 Examples:
 
 * Why Laravel?
-* Why PostgreSQL?
+
+* Why MariaDB?
+
 * Why modular monolith?
+
 * Why separate API?
+
 * Why YouTube for initial live streaming?
+
 * Why object storage?
+
 * Why provider-agnostic AI?
 
 Future decisions should be recorded rather than relying on memory.
 
 ---
 
-# 61. Current Architectural Direction
+**# 61. Current Architectural Direction**
 
-At this stage, the preferred architecture is:
+At this stage, the approved architecture is:
 
 ```text id="x8j7w4"
+
                 ┌──────────────────────┐
+
                 │      ASPIRIAN.PK     │
+
                 │      WordPress       │
+
                 └──────────┬───────────┘
+
                            │
+
                            │
+
                 ┌──────────▼───────────┐
+
                 │   APP.ASPIRIAN.PK     │
+
                 │   Web Application     │
+
                 └──────────┬───────────┘
+
                            │
+
                          HTTPS
+
                            │
+
                 ┌──────────▼───────────┐
+
                 │   API.ASPIRIAN.PK     │
+
                 │   Laravel Backend     │
+
                 └──────────┬───────────┘
+
                            │
+
              ┌─────────────┼─────────────┐
+
              │             │             │
+
              ▼             ▼             ▼
-        PostgreSQL       Redis      Object Storage
+
+       MariaDB 10.6.5    Redis      Object Storage
+
              │
+
              │
+
              ▼
-      Student Learning Data
+
+       Student Learning Data
+
              │
+
              ▼
-       AI Service Layer
+
+        AI Service Layer
+
 ```
 
----
+**---**
+
 
 # 62. Architecture Status
 

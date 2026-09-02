@@ -1292,29 +1292,50 @@ Potential optimizations:
 
 Final conceptual structure:
 
-```text
+
                     Frontend
+
                        │
+
                        ▼
-                 API Gateway /
+
+                API Gateway /
+
                 Reverse Proxy
+
                        │
+
                        ▼
-                  Laravel API
+
+                 Laravel API
+
                        │
+
         ┌──────────────┼──────────────┐
+
         │              │              │
+
         ▼              ▼              ▼
-   Application      AI Layer       Media Layer
+
+   Application      AI Layer      Media Layer
+
      Modules
+
         │
+
         ▼
-    PostgreSQL
+
+   MariaDB 10.6.5
+
         │
+
         ├── Redis
+
         ├── Object Storage
+
         └── Search
-```
+
+
 
 ---
 
