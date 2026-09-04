@@ -67,18 +67,6 @@ class User extends Authenticatable implements MustVerifyEmail
             ->exists();
     }
 
-    public function permissions(): BelongsToMany
-    {
-        return $this->belongsToMany(
-            Permission::class,
-            'role_permissions',
-            'role_id',
-            'permission_id'
-        )->whereHas('roles.users', function ($query) {
-            $query->where('users.id', $this->id);
-        });
-    }
-
     public function hasPermission(string $permission): bool
     {
         return $this->roles()
