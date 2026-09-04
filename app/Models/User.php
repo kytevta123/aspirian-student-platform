@@ -67,6 +67,14 @@ class User extends Authenticatable implements MustVerifyEmail
             ->exists();
     }
 
+    public function roleNames(): array
+    {
+    return $this->roles()
+        ->pluck('display_name')
+        ->values()
+        ->all();
+    }
+
     public function hasPermission(string $permission): bool
     {
         return $this->roles()
