@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Auth\PasswordController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -68,6 +69,14 @@ Route::get('/profile', [ProfileController::class, 'edit'])
 Route::put('/profile', [ProfileController::class, 'update'])
     ->middleware(['auth', 'verified'])
     ->name('profile.update');
+
+Route::get('/profile/password', [PasswordController::class, 'edit'])
+    ->middleware(['auth', 'verified'])
+    ->name('password.edit');
+
+Route::put('/profile/password', [PasswordController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('password.update');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
