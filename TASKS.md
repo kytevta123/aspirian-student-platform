@@ -497,11 +497,89 @@ Tasks:
 
 ## T026 — Question Model
 
+Build the core Question Bank data model.
+
 Support:
 
 - MCQ
+
 - Short Question
+
 - Long Question
+
+Question Structure:
+
+- Question text
+
+- Question type
+
+- Topic association
+
+- Answer
+
+- Explanation
+
+- Marks
+
+- Difficulty
+
+- Status
+
+- MCQ options where applicable
+
+- Created/updated timestamps
+
+- Soft delete support
+
+Question Bank Sources:
+
+- Manually created questions
+
+- Questions imported from existing PDFs
+
+- Questions migrated from existing Aspirian.pk educational content
+
+Content Hierarchy:
+
+- Board
+
+- Academic Session
+
+- Grade
+
+- Subject
+
+- Book
+
+- Chapter/Unit
+
+- Topic
+
+- Question
+
+Data Integrity:
+
+- Every question must belong to a valid Topic
+
+- Question type must be valid
+
+- Marks must be valid
+
+- Difficulty must be valid
+
+- Status must be valid
+
+- Question text must not be forced unique at database level because duplicate detection is handled separately by T031
+
+Existing Content Compatibility:
+
+- Existing Aspirian.pk educational posts must remain unchanged
+
+- Existing Google Drive PDFs must remain available for students
+
+- Questions extracted from existing PDFs can be stored as individual Question Bank records
+
+- Original post/PDF source should remain traceable where available
 
 ---
 
@@ -510,11 +588,17 @@ Support:
 Tasks:
 
 - Create question
+
 - Validation
+
 - Question type
+
 - Marks
+
 - Difficulty
+
 - Answer
+
 - Explanation
 
 ---
@@ -524,8 +608,11 @@ Tasks:
 Tasks:
 
 - Edit question
+
 - Update metadata
+
 - Update answer
+
 - Revision tracking
 
 ---
@@ -535,7 +622,9 @@ Tasks:
 Tasks:
 
 - Delete rules
+
 - Soft delete where appropriate
+
 - Dependency protection
 
 ---
@@ -545,10 +634,15 @@ Tasks:
 Tasks:
 
 - Keyword search
+
 - Subject filter
+
 - Chapter filter
+
 - Topic filter
+
 - Type filter
+
 - Difficulty filter
 
 ---
@@ -558,10 +652,168 @@ Tasks:
 Tasks:
 
 - Text normalization
+
 - Exact duplicate detection
+
 - Similarity detection
+
 - Duplicate warning
+
 - Review workflow
+
+- Duplicate detection before manual creation
+
+- Duplicate detection before bulk import
+
+- Duplicate detection against previously imported questions
+
+Duplicate Handling:
+
+- Do not automatically discard a possible duplicate
+
+- Show duplicate warning during review
+
+- Allow authorized review before final import/creation
+
+- Preserve the original question when a duplicate is confirmed
+
+---
+
+## T031.1 — Existing Question Bank Content Import & Migration
+
+Purpose:
+
+Import and migrate the existing Aspirian.pk question material into the Question Bank without requiring every question to be manually re-entered.
+
+Sources:
+
+- Existing Aspirian.pk educational posts
+
+- Existing Google Drive PDFs embedded in those posts
+
+- Existing MCQs PDFs
+
+- Existing Short Questions PDFs
+
+- Existing Long Questions PDFs
+
+- Other approved question documents where applicable
+
+Import Workflow:
+
+- Select/import source PDF
+
+- Validate PDF
+
+- Extract text from text-based PDF
+
+- Use OCR for scanned/image-based PDF where required
+
+- Identify individual questions
+
+- Classify questions as MCQ, Short Question, or Long Question
+
+- Extract MCQ options where available
+
+- Identify/extract answers where available
+
+- Identify/extract explanations where available
+
+- Assign marks where available
+
+- Assign difficulty where available
+
+- Map questions to Board
+
+- Map questions to Academic Session
+
+- Map questions to Grade
+
+- Map questions to Subject
+
+- Map questions to Book
+
+- Map questions to Chapter/Unit
+
+- Map questions to Topic
+
+- Run duplicate detection
+
+- Generate import preview
+
+- Allow manual review/correction
+
+- Approve valid questions for import
+
+- Bulk create Question Bank records
+
+- Record import result and failures
+
+- Preserve source/reference information
+
+Existing Post & PDF Preservation:
+
+- Existing Aspirian.pk posts must not be deleted or replaced
+
+- Existing Google Drive PDFs must remain available through their existing posts
+
+- Importing a PDF must create Question Bank records; it must not remove the original PDF
+
+- A question may exist both inside the original PDF and as an individual Question Bank record
+
+- Where possible, retain the originating post/PDF reference for traceability
+
+Bulk Migration Requirements:
+
+- Support importing multiple PDFs
+
+- Support gradual migration of the complete existing PDF collection
+
+- Allow migration in batches
+
+- Prevent the same source/questions from being unintentionally imported repeatedly
+
+- Show imported, skipped, duplicate, invalid, and failed question counts
+
+- Allow failed records to be reviewed and corrected before retry
+
+- Maintain import history
+
+Quality Control:
+
+- Imported questions must be reviewed before becoming approved production questions
+
+- Incorrect extraction must be editable during review
+
+- Missing required mappings must block final import
+
+- Duplicate warnings must be visible before approval
+
+- Invalid question records must not enter the production Question Bank
+
+Future Import Extensibility:
+
+- Design the import workflow so additional formats such as DOCX, CSV, or Excel can be supported later
+
+- AI-assisted extraction/classification may be added later without changing the core Question Bank model
+
+Definition of Done:
+
+- Existing PDF content can be extracted/imported without manual retyping of every question
+
+- MCQ, Short Question, and Long Question records can be created from imported material
+
+- Imported questions can be mapped to the existing educational hierarchy
+
+- Duplicate detection is applied before final import
+
+- Import preview and manual review are available
+
+- Existing posts and PDFs remain intact
+
+- Import history and failures are recorded
+
+- Approved questions are available in the Question Bank for later Test Engine use
 
 ---
 
