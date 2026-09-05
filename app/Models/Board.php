@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Board extends Model
 {
-    use SoftDeletes;
-
-    protected $table = 'boards';
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'education_system_id',
@@ -24,19 +25,13 @@ class Board extends Model
         'deleted_at' => 'datetime',
     ];
 
-    /**
-     * Get the education system for this board.
-     */
-    public function educationSystem()
+    public function educationSystem(): BelongsTo
     {
         return $this->belongsTo(EducationSystem::class);
     }
 
-    /**
-     * Get the grade subjects for this board.
-     */
-    public function gradeSubjects()
+    public function books(): HasMany
     {
-        return $this->hasMany(GradeSubject::class);
+        return $this->hasMany(Book::class);
     }
 }

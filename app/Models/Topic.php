@@ -4,33 +4,30 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Subject extends Model
+class Topic extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'code',
+        'chapter_id',
+        'title',
         'description',
+        'sort_order',
         'status',
     ];
 
     protected $casts = [
+        'sort_order' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    public function gradeSubjects(): HasMany
+    public function chapter(): BelongsTo
     {
-        return $this->hasMany(GradeSubject::class);
-    }
-
-    public function books(): HasMany
-    {
-        return $this->hasMany(Book::class);
+        return $this->belongsTo(Chapter::class);
     }
 }

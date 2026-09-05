@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class EducationSystem extends Model
 {
-    use SoftDeletes;
-
-    protected $table = 'education_systems';
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -23,10 +23,7 @@ class EducationSystem extends Model
         'deleted_at' => 'datetime',
     ];
 
-    /**
-     * Get the boards for this education system.
-     */
-    public function boards()
+    public function boards(): HasMany
     {
         return $this->hasMany(Board::class);
     }

@@ -2,14 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class AcademicSession extends Model
 {
-    use SoftDeletes;
-
-    protected $table = 'academic_sessions';
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -26,11 +26,13 @@ class AcademicSession extends Model
         'deleted_at' => 'datetime',
     ];
 
-    /**
-     * Get the grade subjects for this academic session.
-     */
-    public function gradeSubjects()
+    public function books(): HasMany
     {
-        return $this->hasMany(GradeSubject::class);
+        return $this->hasMany(Book::class);
+    }
+
+    public function schoolClasses(): HasMany
+    {
+        return $this->hasMany(SchoolClass::class);
     }
 }
