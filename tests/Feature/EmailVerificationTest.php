@@ -20,6 +20,8 @@ class EmailVerificationTest extends TestCase
     {
         Notification::fake();
 
+        $this->createStudentRole();
+
         $response = $this->post('/register', [
             'name' => 'Test Student',
             'email' => 'student@example.com',
@@ -33,6 +35,7 @@ class EmailVerificationTest extends TestCase
 
         $this->assertNotNull($user);
         $this->assertNull($user->email_verified_at);
+        $this->assertTrue($user->hasRole('STUDENT'));
 
         Notification::assertSentTo(
             $user,
@@ -77,7 +80,7 @@ class EmailVerificationTest extends TestCase
 
         $response = $this->actingAs($user)->get($url);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect(route('dashboard'));
 
         $user->refresh();
 
@@ -182,7 +185,7 @@ class EmailVerificationTest extends TestCase
 
         $response = $this->actingAs($user)->get($url);
 
-        $response->assertRedirect('/');
+        $response->assertRedirect(route('dashboard'));
 
         $user->refresh();
 
@@ -268,14 +271,7 @@ class EmailVerificationTest extends TestCase
             'email_verified_at' => Carbon::now(),
         ]);
 
-        $role = Role::where('name', 'student')->first();
-
-        if (! $role) {
-            $role = Role::create([
-                'name' => 'student',
-                'display_name' => 'Student',
-            ]);
-        }
+        $role = $this->createStudentRole();
 
         $permission = Permission::where('name', 'view_dashboard')->first();
 
@@ -286,12 +282,16 @@ class EmailVerificationTest extends TestCase
             ]);
         }
 
-        $role->permissions()->syncWithoutDetaching([$permission->id]);
+        $role->permissions()->syncWithoutDetaching([
+            $permission->id,
+        ]);
 
-        $user->roles()->syncWithoutDetaching([$role->id]);
+        $user->roles()->syncWithoutDetaching([
+            $role->id,
+        ]);
 
         $response = $this->actingAs($user)
-            ->get('/dashboard');
+            ->get(route('dashboard'));
 
         $response->assertOk();
     }
@@ -303,8 +303,20 @@ class EmailVerificationTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->get('/dashboard');
+            ->get(route('dashboard'));
 
         $response->assertRedirect(route('verification.notice'));
+    }
+
+    private function createStudentRole(): Role
+    {
+        return Role::firstOrCreate(
+            [
+                'name' => 'STUDENT',
+            ],
+            [
+                'display_name' => 'Student',
+            ]
+        );
     }
 }

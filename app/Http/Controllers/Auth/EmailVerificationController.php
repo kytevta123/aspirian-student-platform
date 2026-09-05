@@ -24,14 +24,19 @@ class EmailVerificationController extends Controller
     public function verify(EmailVerificationRequest $request): RedirectResponse
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect('/');
+            return redirect()->route('dashboard');
         }
 
         if ($request->user()->markEmailAsVerified()) {
             event(new Verified($request->user()));
         }
 
-        return redirect('/')->with('status', 'Your email address has been verified.');
+        return redirect()
+            ->route('dashboard')
+            ->with(
+                'status',
+                'Your email address has been verified.'
+            );
     }
 
     /**
@@ -45,6 +50,9 @@ class EmailVerificationController extends Controller
 
         $request->user()->sendEmailVerificationNotification();
 
-        return back()->with('status', 'A new verification link has been sent to your email address.');
+        return back()->with(
+            'status',
+            'A new verification link has been sent to your email address.'
+        );
     }
 }
