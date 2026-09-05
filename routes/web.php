@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -81,3 +82,12 @@ Route::put('/profile/password', [PasswordController::class, 'update'])
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
+
+Route::post('/questions', [QuestionController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('questions.store');
+
+Route::put('/questions/{question}', [QuestionController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('questions.update');
+
