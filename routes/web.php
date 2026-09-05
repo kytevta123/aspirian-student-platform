@@ -91,3 +91,6 @@ Route::put('/questions/{question}', [QuestionController::class, 'update'])
     ->middleware(['auth', 'verified'])
     ->name('questions.update');
 
+Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('questions.destroy');
