@@ -5,44 +5,45 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SchoolClass extends Model
+class StudentClassEnrollment extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'school_id',
-        'grade_id',
+        'student_id',
+        'school_class_id',
         'academic_session_id',
-        'name',
         'status',
+        'enrolled_at',
+        'ended_at',
+    ];
+
+    protected $attributes = [
+        'status' => 'active',
     ];
 
     protected $casts = [
+        'enrolled_at' => 'date',
+        'ended_at' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
     ];
 
-    public function school(): BelongsTo
+    public function student(): BelongsTo
     {
-        return $this->belongsTo(School::class);
+        return $this->belongsTo(Student::class);
     }
 
-    public function grade(): BelongsTo
+    public function schoolClass(): BelongsTo
     {
-        return $this->belongsTo(Grade::class);
+        return $this->belongsTo(SchoolClass::class);
     }
 
     public function academicSession(): BelongsTo
     {
         return $this->belongsTo(AcademicSession::class);
-    }
-
-    public function enrollments(): HasMany
-    {
-        return $this->hasMany(StudentClassEnrollment::class);
     }
 }

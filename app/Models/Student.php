@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
-    protected $table = 'students';
+    use HasFactory;
 
     protected $fillable = [
         'user_id',
@@ -25,51 +29,52 @@ class Student extends Model
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Get the user for this student.
-     */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Get the current grade for this student.
-     */
-    public function currentGrade()
+    public function currentGrade(): BelongsTo
     {
-        return $this->belongsTo(Grade::class, 'current_grade_id');
+        return $this->belongsTo(
+            Grade::class,
+            'current_grade_id'
+        );
     }
 
-    /**
-     * Get the current board for this student.
-     */
-    public function currentBoard()
+    public function currentBoard(): BelongsTo
     {
-        return $this->belongsTo(Board::class, 'current_board_id');
+        return $this->belongsTo(
+            Board::class,
+            'current_board_id'
+        );
     }
 
-    /**
-     * Get the current academic session for this student.
-     */
-    public function currentAcademicSession()
+    public function currentAcademicSession(): BelongsTo
     {
-        return $this->belongsTo(AcademicSession::class, 'current_academic_session_id');
+        return $this->belongsTo(
+            AcademicSession::class,
+            'current_academic_session_id'
+        );
     }
 
-    /**
-     * Get the subjects for this student.
-     */
-    public function subjects()
+    public function studentSubjects(): HasMany
     {
         return $this->hasMany(StudentSubject::class);
     }
 
-    /**
-     * Get the preferences for this student.
-     */
-    public function preferences()
+    public function subjects(): BelongsToMany
     {
-        return $this->hasOne(StudentPreference::class);
+        return $this->belongsToMany(
+            Subject::class,
+            'student_subjects'
+        )->withTimestamps();
+    }
+
+    public function classEnrollments(): HasMany
+    {
+        return $this->hasMany(
+            StudentClassEnrollment::class
+        );
     }
 }
