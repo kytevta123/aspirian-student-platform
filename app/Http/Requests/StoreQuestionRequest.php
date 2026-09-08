@@ -77,6 +77,11 @@ class StoreQuestionRequest extends FormRequest
                     'published',
                 ]),
             ],
+
+            'confirm_duplicate' => [
+                'nullable',
+                'boolean',
+            ],
         ];
     }
 

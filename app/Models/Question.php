@@ -24,10 +24,11 @@ class Question extends Model
         self::TYPE_LONG,
     ];
 
-    protected $fillable = [
+        protected $fillable = [
         'topic_id',
         'question_type',
         'question_text',
+        'normalized_text',
         'options',
         'answer',
         'explanation',

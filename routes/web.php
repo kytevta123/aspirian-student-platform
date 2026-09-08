@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionImportController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -83,6 +84,21 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
 
+
+/*
+|--------------------------------------------------------------------------
+| Question Bank Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/questions/create', [QuestionController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('questions.create');
+
+Route::get('/questions', [QuestionController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('questions.index');
+
 Route::post('/questions', [QuestionController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('questions.store');
@@ -94,3 +110,21 @@ Route::put('/questions/{question}', [QuestionController::class, 'update'])
 Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])
     ->middleware(['auth', 'verified'])
     ->name('questions.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Question Import Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/question-imports/create', [QuestionImportController::class, 'create'])
+    ->middleware(['auth', 'verified'])
+    ->name('question-imports.create');
+
+Route::post('/question-imports', [QuestionImportController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('question-imports.store');
+
+Route::delete('/question-imports/{questionImport}', [QuestionImportController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('question-imports.destroy');
