@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -24,7 +25,7 @@ class Question extends Model
         self::TYPE_LONG,
     ];
 
-        protected $fillable = [
+    protected $fillable = [
         'topic_id',
         'question_type',
         'question_text',
@@ -59,5 +60,25 @@ class Question extends Model
     public function revisions(): HasMany
     {
         return $this->hasMany(QuestionRevision::class);
+    }
+
+    public function tests(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            Test::class,
+            'test_questions'
+        )
+            ->withPivot([
+                'sort_order',
+                'marks',
+            ])
+            ->withTimestamps();
+    }
+
+    public function attemptAnswers(): HasMany
+    {
+        return $this->hasMany(
+            TestAttemptAnswer::class
+        );
     }
 }

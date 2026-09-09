@@ -9,7 +9,10 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\QuestionController;
-use App\Http\Controllers\QuestionImportController;
+use App\Http\Controllers\TestAttemptAnswerController;
+use App\Http\Controllers\TestAttemptController;
+use App\Http\Controllers\TestQuestionController;
+use App\Http\Controllers\TestSubmissionController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -61,29 +64,44 @@ Route::post('/email/verification-notification', [EmailVerificationController::cl
     ->name('verification.send');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified', 'permission:view_dashboard'])
+    ->middleware([
+        'auth',
+        'verified',
+        'permission:view_dashboard',
+    ])
     ->name('dashboard');
 
 Route::get('/profile', [ProfileController::class, 'edit'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('profile.edit');
 
 Route::put('/profile', [ProfileController::class, 'update'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('profile.update');
 
 Route::get('/profile/password', [PasswordController::class, 'edit'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('password.edit');
 
 Route::put('/profile/password', [PasswordController::class, 'update'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('password.update');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
     ->middleware('auth')
     ->name('logout');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -92,39 +110,166 @@ Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
 */
 
 Route::get('/questions/create', [QuestionController::class, 'create'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('questions.create');
 
 Route::get('/questions', [QuestionController::class, 'index'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('questions.index');
 
 Route::post('/questions', [QuestionController::class, 'store'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('questions.store');
 
 Route::put('/questions/{question}', [QuestionController::class, 'update'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('questions.update');
 
 Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
     ->name('questions.destroy');
 
 /*
 |--------------------------------------------------------------------------
-| Question Import Routes
+| Test Attempt Routes
 |--------------------------------------------------------------------------
 */
 
-Route::get('/question-imports/create', [QuestionImportController::class, 'create'])
-    ->middleware(['auth', 'verified'])
-    ->name('question-imports.create');
+Route::get('/tests/{test}/start', [TestAttemptController::class, 'start'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.start');
 
-Route::post('/question-imports', [QuestionImportController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('question-imports.store');
+/*
+|--------------------------------------------------------------------------
+| Existing Test Attempt View
+|--------------------------------------------------------------------------
+|
+| Important:
+| This route shows an existing attempt.
+| It does NOT create a new attempt.
+|
+*/
 
-Route::delete('/question-imports/{questionImport}', [QuestionImportController::class, 'destroy'])
-    ->middleware(['auth', 'verified'])
-    ->name('question-imports.destroy');
+Route::get(
+    '/test-attempts/{attempt}',
+    [TestAttemptController::class, 'show']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.attempts.show');
+
+/*
+|--------------------------------------------------------------------------
+| Test Timer / Auto Expiration
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/test-attempts/{attempt}/expire',
+    [TestAttemptController::class, 'expire']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.attempts.expire');
+
+/*
+|--------------------------------------------------------------------------
+| Test Submission
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/test-attempts/{attempt}/submit',
+    [TestSubmissionController::class, 'submit']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.attempts.submit');
+
+/*
+|--------------------------------------------------------------------------
+| Test Question Selection Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/tests/{test}/questions', [TestQuestionController::class, 'index'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.index');
+
+Route::post('/tests/{test}/questions', [TestQuestionController::class, 'store'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.store');
+
+Route::patch('/tests/{test}/questions/order', [TestQuestionController::class, 'updateOrder'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.order');
+
+Route::post('/tests/{test}/questions/topic', [TestQuestionController::class, 'storeTopic'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.topic');
+
+Route::post('/tests/{test}/questions/difficulty', [TestQuestionController::class, 'storeDifficulty'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.difficulty');
+
+Route::delete('/tests/{test}/questions/{question}', [TestQuestionController::class, 'destroy'])
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.questions.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Test Answer Submission Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/test-attempts/{attempt}/questions/{question}/answer',
+    [TestAttemptAnswerController::class, 'store']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.attempts.answers.store');
