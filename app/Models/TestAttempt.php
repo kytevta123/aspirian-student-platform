@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class TestAttempt extends Model
 {
@@ -59,6 +60,13 @@ class TestAttempt extends Model
     {
         return $this->hasMany(
             TestAttemptAnswer::class
+        );
+    }
+
+    public function result(): HasOne
+    {
+        return $this->hasOne(
+            TestResult::class
         );
     }
 

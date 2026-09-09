@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Test;
 use App\Models\TestAttempt;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\View\View;
 
 class TestAttemptController extends Controller
@@ -28,7 +28,7 @@ class TestAttemptController extends Controller
         */
 
         if ($test->status !== Test::STATUS_PUBLISHED) {
-            abort(404);
+            abort(403);
         }
 
         /*
@@ -76,7 +76,7 @@ class TestAttemptController extends Controller
             'user_id' => $request->user()->id,
             'started_at' => $startedAt,
             'expires_at' => $startedAt->copy()->addMinutes(
-                $test->duration_minutes
+                $test->duration
             ),
             'status' => TestAttempt::STATUS_IN_PROGRESS,
         ]);
@@ -89,7 +89,11 @@ class TestAttemptController extends Controller
 
         return view(
             'tests.attempts.show',
-            compact('attempt', 'test')
+            [
+                'attempt' => $attempt,
+                'test' => $test,
+                'questions' => $test->questions,
+            ]
         );
     }
 
@@ -176,6 +180,7 @@ class TestAttemptController extends Controller
 
         if ($attempt->isSubmitted()) {
             return response()->json([
+                'success' => false,
                 'message' =>
                     'This test attempt has already been submitted.',
             ], 409);
@@ -189,6 +194,7 @@ class TestAttemptController extends Controller
 
         if ($attempt->status === TestAttempt::STATUS_EXPIRED) {
             return response()->json([
+                'success' => true,
                 'message' =>
                     'This test attempt has already expired.',
                 'status' => TestAttempt::STATUS_EXPIRED,
@@ -203,6 +209,7 @@ class TestAttemptController extends Controller
 
         if (! $attempt->isExpired()) {
             return response()->json([
+                'success' => false,
                 'message' =>
                     'The test time has not expired yet.',
                 'status' => $attempt->status,
@@ -220,6 +227,7 @@ class TestAttemptController extends Controller
         $attempt->markAsExpired();
 
         return response()->json([
+            'success' => true,
             'message' =>
                 'The test time has expired. Your attempt has been closed.',
             'status' => TestAttempt::STATUS_EXPIRED,

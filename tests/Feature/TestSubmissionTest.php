@@ -11,6 +11,7 @@ use App\Models\Question;
 use App\Models\Subject;
 use App\Models\Test;
 use App\Models\TestAttempt;
+use App\Models\TestResult;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -146,6 +147,10 @@ class TestSubmissionTest extends TestCase
             'id' => $attempt->id,
             'status' => TestAttempt::STATUS_IN_PROGRESS,
         ]);
+
+        $this->assertDatabaseMissing('test_results', [
+            'test_attempt_id' => $attempt->id,
+        ]);
     }
 
     public function test_unverified_user_cannot_submit_test_attempt(): void
@@ -178,6 +183,10 @@ class TestSubmissionTest extends TestCase
             'id' => $attempt->id,
             'status' => TestAttempt::STATUS_IN_PROGRESS,
         ]);
+
+        $this->assertDatabaseMissing('test_results', [
+            'test_attempt_id' => $attempt->id,
+        ]);
     }
 
     public function test_verified_user_can_submit_own_in_progress_attempt(): void
@@ -202,10 +211,19 @@ class TestSubmissionTest extends TestCase
                 )
             );
 
+        $attempt->refresh();
+
+        $result = TestResult::where(
+            'test_attempt_id',
+            $attempt->id
+        )->first();
+
+        $this->assertNotNull($result);
+
         $response->assertRedirect(
             route(
-                'tests.attempts.show',
-                $attempt
+                'tests.results.show',
+                $result
             )
         );
 
@@ -219,6 +237,12 @@ class TestSubmissionTest extends TestCase
             'user_id' => $user->id,
             'test_id' => $test->id,
             'status' => TestAttempt::STATUS_SUBMITTED,
+        ]);
+
+        $this->assertDatabaseHas('test_results', [
+            'test_attempt_id' => $attempt->id,
+            'test_id' => $test->id,
+            'user_id' => $user->id,
         ]);
     }
 
@@ -299,6 +323,13 @@ class TestSubmissionTest extends TestCase
 
         $originalSubmittedAt = $attempt->submitted_at;
 
+        $resultCount = TestResult::where(
+            'test_attempt_id',
+            $attempt->id
+        )->count();
+
+        $this->assertSame(1, $resultCount);
+
         $response = $this
             ->actingAs($user)
             ->post(
@@ -326,6 +357,14 @@ class TestSubmissionTest extends TestCase
             $attempt->submitted_at?->format(
                 'Y-m-d H:i:s'
             )
+        );
+
+        $this->assertSame(
+            1,
+            TestResult::where(
+                'test_attempt_id',
+                $attempt->id
+            )->count()
         );
     }
 
@@ -368,6 +407,10 @@ class TestSubmissionTest extends TestCase
         $this->assertNull(
             $attempt->submitted_at
         );
+
+        $this->assertDatabaseMissing('test_results', [
+            'test_attempt_id' => $attempt->id,
+        ]);
     }
 
     public function test_already_expired_attempt_cannot_be_submitted(): void
@@ -409,6 +452,10 @@ class TestSubmissionTest extends TestCase
         $this->assertNull(
             $attempt->submitted_at
         );
+
+        $this->assertDatabaseMissing('test_results', [
+            'test_attempt_id' => $attempt->id,
+        ]);
     }
 
     public function test_user_cannot_submit_another_users_attempt(): void
@@ -443,6 +490,10 @@ class TestSubmissionTest extends TestCase
             'id' => $attempt->id,
             'user_id' => $owner->id,
             'status' => TestAttempt::STATUS_IN_PROGRESS,
+        ]);
+
+        $this->assertDatabaseMissing('test_results', [
+            'test_attempt_id' => $attempt->id,
         ]);
     }
 
