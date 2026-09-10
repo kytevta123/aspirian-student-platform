@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PracticeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -203,6 +204,25 @@ Route::get(
     ->name('revision.index');
 
 /*
+|--------------------------------------------------------------------------
+| Practice Routes
+|--------------------------------------------------------------------------
+|
+| Shows published topics available for student practice.
+|
+*/
+
+Route::get(
+    '/practice',
+    [PracticeController::class, 'index']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('practice.index');
+
+    /*
 |--------------------------------------------------------------------------
 | Test Attempt Routes
 |--------------------------------------------------------------------------
