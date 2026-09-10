@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RevisionQueueController;
 use App\Http\Controllers\TestAttemptAnswerController;
 use App\Http\Controllers\TestAttemptController;
 use App\Http\Controllers\TestQuestionController;
@@ -181,6 +182,25 @@ Route::delete('/questions/{question}', [QuestionController::class, 'destroy'])
         'verified',
     ])
     ->name('questions.destroy');
+
+/*
+|--------------------------------------------------------------------------
+| Revision Queue
+|--------------------------------------------------------------------------
+|
+| Shows the authenticated student's weak topics in revision priority order.
+|
+*/
+
+Route::get(
+    '/revision-queue',
+    [RevisionQueueController::class, 'index']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('revision.index');
 
 /*
 |--------------------------------------------------------------------------
