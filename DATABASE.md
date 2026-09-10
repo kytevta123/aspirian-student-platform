@@ -1,10 +1,14 @@
 # Aspirian Student Platform — Database Design
 
-**Version:** 1.0
-**Status:** Initial Database Blueprint
+**Version:** 1.1
+
+**Status:** Master Database Blueprint — Updated for Universal Practice Architecture
+
 **Database:** MariaDB 10.6.5
+
 **Project:** Aspirian Student Platform
-**Academic Range:** Nursery to Class 12
+
+**Academic Range:** Nursery, Prep, Class 1–12
 
 ---
 
@@ -22,7 +26,11 @@ The database must be:
 * Multi-session capable
 * Multi-school capable
 
-The database must not contain assumptions that limit the platform to Classes 9–12.
+The database must not contain assumptions that limit the platform to a small range of classes or to a single type of learner.
+
+The Aspirian database must support learners from **Nursery and Prep through Class 12**.
+
+The system must support both early-years learning and advanced secondary-level academic learning without requiring a separate database architecture for different age groups.
 
 ---
 
@@ -60,7 +68,7 @@ Use:
 
 * `snake_case` for table and column names
 * Singular conceptual entities with plural table names
-* UUID primary keys where appropriate
+* UUID primary keys where appropriate at the conceptual architecture level
 * Foreign keys for relationships
 * Timestamps for important records
 * Soft deletion where historical records must be preserved
@@ -69,13 +77,23 @@ Example:
 
 ```text
 users
+
 students
+
 subjects
+
 chapters
+
 questions
+
 tests
+
 test_attempts
+
+learning_activities
 ```
+
+Naming conventions must remain consistent with the actual Laravel implementation.
 
 ---
 
@@ -83,7 +101,7 @@ test_attempts
 
 The database blueprint may use UUIDs where appropriate at the conceptual architecture level. However, the current Laravel 12 implementation uses BIGINT UNSIGNED primary and foreign keys where required by the existing application schema.
 
-The existing users.id is a BIGINT UNSIGNED primary key. Related tables must therefore use compatible BIGINT UNSIGNED foreign keys.
+The existing `users.id` is a BIGINT UNSIGNED primary key. Related tables must therefore use compatible BIGINT UNSIGNED foreign keys.
 
 Primary key types must remain consistent across related tables and must be compatible with the actual Laravel 12 and MariaDB 10.6.5 implementation.
 
@@ -166,6 +184,8 @@ role_id
 
 This allows a user to have multiple roles where appropriate.
 
+Authorization must always be enforced at the server/application level.
+
 ---
 
 # 6. Student Profiles
@@ -191,7 +211,7 @@ Sensitive fields should only be collected where genuinely required.
 
 ## 6.2 student_subjects
 
-Stores subjects selected by the student.
+Stores subjects selected or associated with the student.
 
 ```text
 student_id
@@ -253,7 +273,7 @@ Examples may include:
 * Sindh Boards
 * KPK Boards
 
-The architecture must support individual boards rather than assuming only Punjab Board.
+The architecture must support individual boards rather than assuming only one board.
 
 ---
 
@@ -287,17 +307,26 @@ sort_order
 status
 ```
 
-Examples:
+Supported academic levels include:
 
 ```text
 Nursery
-KG
 Prep
 Class 1
 Class 2
-...
+Class 3
+Class 4
+Class 5
+Class 6
+Class 7
+Class 8
+Class 9
+Class 10
+Class 11
 Class 12
 ```
+
+Classes must be stored as data rather than hard-coded into application logic.
 
 ---
 
@@ -388,7 +417,7 @@ difficulty
 status
 ```
 
-Learning objectives can later connect content, questions, tests, and student mastery.
+Learning objectives can later connect content, questions, activities, tests, practice sessions, and student mastery.
 
 ---
 
@@ -510,6 +539,8 @@ Possible knowledge types:
 
 ## 14.1 questions
 
+The `questions` entity is the universal educational question entity used by the Question Bank, formal assessments, Practice Engine, revision activities, and other learning experiences.
+
 ```text
 id
 question_type
@@ -532,13 +563,114 @@ created_at
 updated_at
 ```
 
+The question architecture must remain extensible so that new question types can be introduced without creating a separate question table for every interaction style.
+
+---
+
+## 14.2 Universal Practice Question Types
+
+The Aspirian Practice Engine must support learners from **Nursery and Prep through Class 12**.
+
+The question architecture must not be limited to traditional MCQ, Short Answer, and Long Answer questions.
+
+Supported and planned practice question types include:
+
+### Traditional Questions
+
+* MCQ
+* Short Answer
+* Long Answer
+* Fill in the Blank
+* True / False
+* Yes / No
+* Multiple Select
+* Correct Word
+* Spelling
+
+### Matching Questions
+
+* Matching
+* Drag and Drop Matching
+* Alphabet Matching
+* Haroof-e-Tahajji Matching
+* Word Matching
+* Picture-to-Word Matching
+* Word-to-Picture Matching
+
+### Language Practice
+
+* English to Urdu
+* Urdu to English
+* Translation
+* Word Meaning
+* Sentence Formation
+
+### Early Years Practice
+
+Early years practice must support:
+
+* Nursery
+* Prep
+
+Examples include:
+
+* Alphabet Recognition
+* Haroof-e-Tahajji Recognition
+* Missing Letter
+* Missing Harf
+* Picture Identification
+* Picture Selection
+* Picture Matching
+* Word Matching
+* Simple True / False
+* Simple Yes / No
+* Simple Drag and Drop activities
+
+### Image-Based Questions
+
+The question system must support:
+
+* Image Identification
+* Image Selection
+* Image-Based MCQ
+* Picture-to-Word Questions
+* Word-to-Picture Questions
+* Picture Matching
+* Image-Based Matching
+
+### Interactive Questions
+
+The architecture must support interactive question interfaces including:
+
+* Drag and Drop
+* Matching
+* Ordering / Arrange
+* Multiple Selection
+* Interactive Choice
+
+### Audio / Listening Questions
+
+The architecture should remain extensible for future audio-based practice including:
+
+* Listen and Select
+* Listen and Match
+* Listening Comprehension
+* Audio-to-Word
+* Audio-to-Picture
+
+The database design must not require a separate question table for every question type.
+
+A universal question entity should be used, while type-specific configuration and answer data determine how the question is rendered and evaluated.
+
+The system should be capable of supporting future question types without redesigning the complete Question Bank.
+
 ---
 
 # 15. Question Options
 
 ## 15.1 question_options
 
-Used for MCQs and similar question types.
+Stores selectable options for questions that require one or more choices.
 
 ```text
 id
@@ -548,13 +680,30 @@ sort_order
 is_correct
 ```
 
+Question options may support:
+
+* MCQ
+* True / False
+* Yes / No
+* Multiple Select
+* Image-Based MCQ
+* Picture Selection
+* Interactive Choice
+* Other future choice-based question types
+
+Options may also reference media or file metadata when an option is represented by an image, audio file, or other supported media.
+
+Actual binary media content must not be stored directly in MariaDB.
+
+Correct-option information must never be exposed to students before evaluation.
+
 ---
 
 # 16. Question Answers
 
-For questions requiring structured answer information.
-
 ## 16.1 question_answers
+
+Stores structured answer information for questions where a simple option list is insufficient.
 
 ```text
 id
@@ -565,7 +714,36 @@ created_at
 updated_at
 ```
 
-Answer data may contain structured information where necessary.
+Possible `answer_type` values include:
+
+* text
+* single_choice
+* multiple_choice
+* true_false
+* fill_blank
+* matching
+* ordering
+* translation
+* image_selection
+* drag_drop
+
+`answer_data` may contain:
+
+* accepted text answers
+* multiple accepted answers
+* matching pairs
+* correct ordering
+* drag-and-drop mappings
+* translation answers
+* image identifiers
+* option identifiers
+* other structured evaluation data
+
+Correct answer data must never be exposed to students before submission.
+
+Answer evaluation must be performed server-side where applicable.
+
+The answer architecture must allow future question types without creating a separate answer table for every question type.
 
 ---
 
@@ -579,12 +757,16 @@ name
 slug
 ```
 
+---
+
 ## 17.2 question_tags
 
 ```text
 question_id
 tag_id
 ```
+
+Tags may be used for filtering, search, practice selection, difficulty analysis, and personalization.
 
 ---
 
@@ -607,6 +789,8 @@ Statuses:
 * approved
 * rejected
 * revision_required
+
+Questions generated or imported from external or AI sources must not automatically become approved educational content.
 
 ---
 
@@ -632,6 +816,8 @@ Detection methods:
 * semantic
 
 The system must distinguish between genuine duplicates and valid variations.
+
+Duplicate detection should occur before final approval where applicable.
 
 ---
 
@@ -668,6 +854,27 @@ Test types:
 * Board Style
 * Teacher Test
 
+### Practice Test Clarification
+
+The `Practice` test type represents practice-oriented learning configuration.
+
+However, Practice Engine sessions are conceptually different from formal examination attempts.
+
+Practice may use questions directly from the Question Bank without creating a formal exam result.
+
+Practice sessions may provide:
+
+* Instant answer checking
+* Immediate feedback
+* Correct answer after submission
+* Explanations
+* Question-by-question progress
+* Topic-wise progress
+* Correct/wrong/unanswered tracking
+* Completion percentage
+
+Formal tests continue to use the formal Test Attempt and Result architecture.
+
 ---
 
 # 21. Test Questions
@@ -683,6 +890,8 @@ marks
 ```
 
 A question may appear in many different tests.
+
+The same Question Bank question may therefore be reused for formal tests, practice configurations, revision activities, and other learning experiences where appropriate.
 
 ---
 
@@ -703,6 +912,8 @@ percentage
 time_spent_seconds
 ```
 
+Formal test attempts must remain separate from ordinary practice learning activity records where practice does not represent a formal examination.
+
 ---
 
 # 23. Student Answers
@@ -719,6 +930,10 @@ marks_awarded
 time_spent_seconds
 answered_at
 ```
+
+Student answer records for formal tests must preserve the submitted answer and evaluation result.
+
+Correct answer information must not be exposed to the student before the appropriate evaluation stage.
 
 ---
 
@@ -747,6 +962,8 @@ Statuses:
 * active
 * reviewing
 * mastered
+
+Mistakes may originate from formal tests, practice sessions, assignments, or other evaluated learning activities depending on the implementation.
 
 ---
 
@@ -777,6 +994,8 @@ Source types may include:
 * Upcoming Exam
 * AI Recommendation
 
+Revision recommendations should be based on actual student learning data where possible.
+
 ---
 
 # 26. Topic Mastery
@@ -798,6 +1017,8 @@ updated_at
 ```
 
 This table is a key component of personalized learning.
+
+Practice activity may contribute to topic mastery without creating a formal examination result.
 
 ---
 
@@ -830,6 +1051,38 @@ Activity types may include:
 
 ---
 
+## 27.2 Practice Learning Records
+
+Practice activity may generate application-level learning records such as:
+
+```text
+Practice Session Started
+
+Question Attempted
+
+Question Answered
+
+Question Skipped
+
+Question Checked
+
+Correct Answer
+
+Incorrect Answer
+
+Practice Session Completed
+
+Topic Practiced
+```
+
+These records are learning events and should not automatically be treated as formal examination results.
+
+The implementation may initially track these events using existing application-level learning behavior and `learning_activities`.
+
+A dedicated persistent practice-session table should only be introduced if long-term practice history, analytics, synchronization, or cross-device recovery requires it.
+
+---
+
 # 28. Student Recommendations
 
 ## 28.1 student_recommendations
@@ -846,6 +1099,8 @@ status
 created_at
 expires_at
 ```
+
+AI-generated recommendations should ultimately create records in the normal recommendation system.
 
 ---
 
@@ -946,6 +1201,8 @@ created_at
 updated_at
 ```
 
+Grammar exercises may later integrate with the Universal Practice Engine.
+
 ---
 
 # 31. Writing Practice
@@ -975,6 +1232,8 @@ Supported types:
 * Report
 * Notice
 * Speech
+
+Writing activities may later use the same learning-progress and evaluation architecture as other practice experiences where appropriate.
 
 ---
 
@@ -1029,6 +1288,8 @@ Activity types may include:
 * Diagram
 * Quiz
 
+Interactive activities may be integrated with the Universal Practice Engine where they require question selection, answer evaluation, and student progress tracking.
+
 ---
 
 # 33. Viva
@@ -1042,6 +1303,8 @@ expected_concepts
 difficulty
 status
 ```
+
+Viva questions may reuse the universal Question Bank architecture.
 
 ---
 
@@ -1086,6 +1349,8 @@ submitted_at
 
 Student code must never be executed directly on the main application server.
 
+A sandboxed execution environment must be used for code execution.
+
 ---
 
 # 35. Media
@@ -1124,6 +1389,8 @@ Providers may include:
 * External Streaming Provider
 * Aspirian
 
+Media may be associated with Questions, Activities, Content, Lessons, and Practice Engine interactions.
+
 ---
 
 # 36. Video Quiz Markers
@@ -1138,6 +1405,8 @@ timestamp_seconds
 required
 created_at
 ```
+
+Video questions may reuse the Universal Question Bank.
 
 ---
 
@@ -1154,6 +1423,8 @@ status
 created_at
 updated_at
 ```
+
+Audio resources may later support the Practice Engine through listening-based question types.
 
 ---
 
@@ -1220,6 +1491,8 @@ Job types may include:
 * Audio Summary
 * Video Processing
 
+AI-generated questions must pass the normal review and approval process before becoming approved educational content.
+
 ---
 
 # 40. AI Source References
@@ -1245,11 +1518,17 @@ AI recommendations should ultimately create records in the normal recommendation
 
 ```text
 AI Analysis
+
     ↓
+
 Recommendation
+
     ↓
+
 student_recommendations
 ```
+
+This keeps AI analysis separate from the student's actual learning recommendation records.
 
 ---
 
@@ -1380,6 +1659,8 @@ status
 feedback
 ```
 
+Assignments may later use Question Bank questions and Universal Practice Engine components where appropriate.
+
 ---
 
 # 46. Notifications
@@ -1487,7 +1768,9 @@ description
 updated_at
 ```
 
-Sensitive secrets should NOT be stored as ordinary settings.
+Sensitive secrets must NOT be stored as ordinary settings.
+
+Application secrets should use appropriate environment and secret-management mechanisms.
 
 ---
 
@@ -1509,57 +1792,124 @@ created_at
 
 Actual large files should be stored in object storage rather than the MariaDB database.
 
-MariaDB should store the file metadata and object storage reference, while the actual file content should remain in object storage.
+MariaDB should store file metadata and the object-storage reference, while actual file content should remain in object storage.
+
+Files may be referenced by:
+
+* Questions
+* Question options
+* Question answers
+* Content
+* Activities
+* Audio resources
+* Video resources
+* Student submissions
 
 ---
 
 # 51. Core Relationships
 
-The most important relationships are:
+The most important academic relationships are:
 
 ```text
 Board
+
   ↓
+
 Academic Session
+
   ↓
+
 Grade
+
   ↓
+
 Subject
+
   ↓
+
 Book
+
   ↓
+
 Chapter
+
   ↓
+
 Topic
+
   ↓
-Content
+
+Learning Content
+
   ├── Questions
   ├── Practicals
   ├── Activities
   ├── Videos
   ├── Flashcards
-  └── Tests
+  ├── Tests
+  └── Practice
+```
+
+Universal Question architecture:
+
+```text
+Question
+
+   │
+   ├── Question Options
+   │
+   ├── Question Answers
+   │
+   ├── Media / Files
+   │
+   └── Tags
+          │
+          ↓
+   Universal Practice Engine
+          │
+          ├── Nursery
+          ├── Prep
+          └── Class 1–12
 ```
 
 Student learning:
 
 ```text
 Student
-  ↓
+
+   ↓
+
 Learning Activity
-  ↓
-Question Attempt
-  ↓
-Result
-  ↓
-Mistake
-  ↓
+
+   ├── Test
+   ├── Practice
+   ├── Revision
+   ├── Flashcard
+   └── Activity
+
+   ↓
+
+Learning Progress
+
+   ↓
+
+Mistake / Weak Topic
+
+   ↓
+
 Topic Mastery
-  ↓
+
+   ↓
+
 Revision Queue
-  ↓
+
+   ↓
+
 Recommendation
 ```
+
+Practice learning should remain logically separate from formal examination results unless the product explicitly defines a practice activity as a formal test.
 
 ---
 
@@ -1579,31 +1929,51 @@ Do not hard-code academic years.
 
 ## Rule 4
 
-Do not store AI-generated content as automatically approved content.
+Do not assume every student uses the same question interaction.
 
 ## Rule 5
 
-Do not store large media files directly inside the database.
+Do not create a separate question table for every question type.
 
 ## Rule 6
 
-Do not execute student code on the main application server.
+Do not expose correct answers before the appropriate evaluation stage.
 
 ## Rule 7
 
-Do not rely on frontend authorization.
+Do not treat AI-generated content as automatically approved content.
 
 ## Rule 8
 
-Important historical educational data should not be casually deleted.
+Do not store large media files directly inside the database.
 
 ## Rule 9
 
-Question duplication must be checked before approval.
+Do not execute student code on the main application server.
 
 ## Rule 10
 
+Do not rely on frontend authorization.
+
+## Rule 11
+
+Important historical educational data should not be casually deleted.
+
+## Rule 12
+
+Question duplication must be checked before approval.
+
+## Rule 13
+
 Student learning data must be access-controlled.
+
+## Rule 14
+
+Practice data must not unnecessarily pollute formal test result history.
+
+## Rule 15
+
+The Universal Practice Engine must remain extensible for future interaction types.
 
 ---
 
@@ -1615,20 +1985,56 @@ Likely indexes include:
 
 ```text
 users.email
+
 students.user_id
+
+questions.grade_id
+
 questions.subject_id
+
+questions.chapter_id
+
 questions.topic_id
+
+questions.question_type
+
 questions.difficulty
+
+question_options.question_id
+
+question_answers.question_id
+
+tests.grade_id
+
 tests.subject_id
+
+tests.chapter_id
+
+tests.topic_id
+
 test_attempts.student_id
+
 student_mistakes.student_id
+
+student_mistakes.topic_id
+
 student_topic_mastery.student_id
+
+student_topic_mastery.topic_id
+
 revision_items.student_id
+
+revision_items.topic_id
+
 learning_activities.student_id
+learning_activities.activity_type
+
 notifications.user_id
 ```
 
 Composite indexes will be added based on actual query patterns.
+
+Indexes must be based on real application queries and should not be added blindly.
 
 ---
 
@@ -1640,13 +2046,17 @@ Example:
 
 ```text
 questions.topic_id
+
         ↓
+
 topics.id
 ```
 
 Delete behavior must be selected carefully.
 
 Historical educational and assessment records should generally not cascade-delete accidentally.
+
+Reference data should preferably be archived or soft-deleted where historical relationships must remain valid.
 
 ---
 
@@ -1659,14 +2069,15 @@ Soft deletion may be used for:
 * Users
 * Schools
 * Tests
-
-where historical records are important.
+* Other entities where historical records are important
 
 Example:
 
 ```text
 deleted_at
 ```
+
+Soft deletion should not be applied automatically to every table.
 
 ---
 
@@ -1678,10 +2089,12 @@ The database must enforce:
 * Foreign keys
 * Required fields
 * Valid status values
-* Appropriate check constraints
+* Appropriate check constraints where supported
 * Transaction boundaries
 
 Business validation must also exist in the application layer.
+
+Database constraints and application validation should complement each other.
 
 ---
 
@@ -1696,8 +2109,11 @@ Examples:
 * Content approval
 * Question approval
 * Student enrollment
+* Other operations involving multiple related records
 
 This prevents partially completed operations.
+
+Practice answer submission should also use safe transactional behavior where multiple related records are updated together.
 
 ---
 
@@ -1707,13 +2123,15 @@ Database security must include:
 
 * Strong credentials
 * Restricted access
-* Encrypted connections
+* Encrypted connections where supported
 * Least privilege
 * Regular backups
 * Monitoring
 * Secret management
 
 Database credentials must never be committed to Git.
+
+Correct answers, answer keys, private student information, and administrative data must be protected from unauthorized access.
 
 ---
 
@@ -1727,13 +2145,21 @@ Possible future architecture:
 
 ```text
 Knowledge
+
    ↓
+
 Embedding
+
    ↓
+
 Vector Index
+
    ↓
+
 Semantic Retrieval
+
    ↓
+
 AI Tutor
 ```
 
@@ -1749,11 +2175,17 @@ At larger scale:
 
 ```text
 Operational Database
+
        ↓
+
 Event / Analytics Pipeline
+
        ↓
+
 Analytics Storage
+
        ↓
+
 Reports / Dashboards
 ```
 
@@ -1771,15 +2203,27 @@ Example workflow:
 
 ```text
 Migration
+
    ↓
+
 Test
+
    ↓
+
 Review
+
    ↓
+
 Staging
+
    ↓
+
 Production
 ```
+
+The conceptual database blueprint must not be interpreted as a requirement to immediately create every listed table.
+
+Only tables required by the current development phase should be implemented.
 
 ---
 
@@ -1805,37 +2249,85 @@ MVP tables should focus on:
 
 ```text
 users
+
 roles
+
 user_roles
+
 students
 
 education_systems
+
 boards
+
 academic_sessions
+
 grades
+
 subjects
+
 grade_subjects
+
 books
+
 chapters
+
 topics
 
 content_items
 
 questions
+
 question_options
 
 tests
+
 test_questions
+
 test_attempts
+
 student_answers
 
 student_mistakes
+
 student_topic_mastery
+
 revision_items
+
 learning_activities
 ```
 
 Additional modules will be introduced progressively.
+
+---
+
+## 63.1 Practice Engine Database Principle
+
+The Practice Engine will initially reuse the existing Question Bank rather than creating a separate `practice_questions` table.
+
+Practice sessions, question selection, answer evaluation, and progress tracking will be implemented as application-level learning behavior around the existing question architecture.
+
+A separate persistent practice-session table may only be introduced later if long-term practice history, analytics, synchronization, or cross-device session recovery requires it.
+
+The Practice Engine should therefore avoid unnecessary duplication of questions.
+
+A single Question Bank question may be reused across:
+
+```text
+Formal Tests
+
+Practice
+
+Revision
+
+Assignments
+
+Interactive Activities
+
+Other Learning Experiences
+```
+
+where appropriate.
 
 ---
 
@@ -1845,42 +2337,69 @@ The database will evolve through controlled versions.
 
 ```text
 v1
- ↓
+
+  ↓
+
 MVP
- ↓
+
+  ↓
+
 v1.1
- ↓
+
+  ↓
+
+Universal Practice Architecture
+
+  ↓
+
 AI Features
- ↓
-v1.2
- ↓
+
+  ↓
+
 Teacher Features
- ↓
-v1.3
- ↓
+
+  ↓
+
 Parent Features
- ↓
-v2
- ↓
+
+  ↓
+
 School / Multi-Tenant Platform
+
+  ↓
+
+Future Learning Technologies
 ```
 
 Existing data must be protected during migrations.
+
+New functionality should extend the architecture rather than unnecessarily replacing existing structures.
 
 ---
 
 # 65. Database Status
 
 **File:** `DATABASE.md`
+
 **Phase:** B
+
 **Module:** B8 — Database Architecture
 
-**Version:** 1.0
-**Status:** Initial Master Database Blueprint
+**Version:** 1.1
 
-This document defines the conceptual database architecture.
+**Status:** Master Database Blueprint — Updated for Universal Practice Architecture
 
-Exact SQL migrations and implementation details will be created during development.
+This document defines the conceptual database architecture for the Aspirian Student Platform.
+
+The architecture supports the complete academic range from **Nursery, Prep, and Class 1 through Class 12**.
+
+The database is designed to support traditional questions, language exercises, matching, drag-and-drop, image-based questions, interactive activities, and future audio/listening practice without requiring a separate database table for every question type.
+
+The architecture also separates the Question Bank from the learning experiences that consume questions.
+
+The Universal Practice Engine is designed as a reusable learning layer around the Question Bank rather than as a duplicate question repository.
+
+Exact SQL migrations and implementation details will be created progressively during development.
 
 ---
 
@@ -1888,4 +2407,14 @@ Exact SQL migrations and implementation details will be created during developme
 
 > **The database should model the educational system, not the current feature list.**
 
-Aspirian's database must be capable of supporting the student's complete journey from **Nursery to Class 12**, while remaining flexible enough for future boards, schools, AI systems, teachers, parents, mobile applications, and new educational technologies.
+The Aspirian Practice Engine must be capable of serving every learner level from **Nursery and Prep through Class 12**.
+
+The system must not assume that every learner answers questions in the same way.
+
+Young learners may require pictures, alphabet recognition, Haroof-e-Tahajji, matching, drag-and-drop, and simple interactive activities, while older students may require MCQs, short answers, long answers, translation, problem solving, and subject-specific questions.
+
+Therefore, the database must provide a universal and extensible question architecture while keeping question content, answer evaluation, media, and student progress logically separated.
+
+Aspirian's database must support the student's complete learning journey from **Nursery and Prep through Class 12**, while remaining flexible enough for future boards, schools, AI systems, teachers, parents, mobile applications, interactive learning, audio-based learning, and new educational technologies.
+
+The database must evolve progressively without unnecessary duplication and without forcing every future feature into the initial MVP schema.

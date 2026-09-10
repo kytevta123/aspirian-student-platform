@@ -1,10 +1,15 @@
 # Aspirian Student Platform — Technical Architecture
 
-**Document Version:** 1.0
-**Status:** Initial Architecture
+**Document Version:** 1.1
+
+**Status:** Master Architecture Blueprint — Updated for Universal Practice Architecture
+
 **Project:** Aspirian Student Platform
+
 **Primary Application:** `app.aspirian.pk`
+
 **Backend API:** `api.aspirian.pk`
+
 **Existing Website:** `aspirian.pk`
 
 ---
@@ -15,7 +20,20 @@ Aspirian Student Platform will be built as a **standalone, modular, API-driven e
 
 The architecture must support the complete long-term vision:
 
-* Nursery to Class 12
+* Nursery
+* Prep
+* Class 1
+* Class 2
+* Class 3
+* Class 4
+* Class 5
+* Class 6
+* Class 7
+* Class 8
+* Class 9
+* Class 10
+* Class 11
+* Class 12
 * Multiple boards
 * Multiple academic sessions
 * Large educational content libraries
@@ -34,22 +52,26 @@ The architecture must support the complete long-term vision:
 
 The architecture should allow new modules to be added without requiring a complete rewrite of the existing system.
 
+The platform must not be architecturally limited to any particular class range, board, subject, question type, or learning method.
+
 ---
 
 # 2. System Separation
 
 Aspirian will consist of separate but connected systems.
 
-```text id="gq1p3v"
+```text
                          ASPIRIAN ECOSYSTEM
+
                                 │
+
               ┌─────────────────┴─────────────────┐
               │                                   │
        ASPIRIAN.PK                         APP.ASPIRIAN.PK
        WordPress Website                   Student Platform
               │                                   │
-       Public Content                        Frontend
-       SEO                                   Backend API
+       Public Content                         Frontend
+       SEO                                    Backend API
        Free Tools                            AI Services
        Career Hub                            Database
        Tutorials                             Learning Engine
@@ -61,10 +83,12 @@ Aspirian will consist of separate but connected systems.
                                 │
                  ┌──────────────┼──────────────┐
                  │              │              │
-              YouTube          AI          Email/Other
+              YouTube          AI        Email/Other
 ```
 
 The WordPress website and Student Platform will remain technically independent.
+
+The Student Platform must not become dependent on WordPress for core student accounts, learning records, Question Bank data, assessments, progress, or other core educational operations.
 
 ---
 
@@ -72,7 +96,7 @@ The WordPress website and Student Platform will remain technically independent.
 
 ## Public Website
 
-```text id="6g2w7h"
+```text
 https://aspirian.pk
 ```
 
@@ -93,7 +117,7 @@ Responsibilities:
 
 ## Student Application
 
-```text id="w1d8v6"
+```text
 https://app.aspirian.pk
 ```
 
@@ -103,7 +127,9 @@ Responsibilities:
 * Dashboard
 * Study Center
 * Question Bank
+* Universal Practice Engine
 * Tests
+* Results
 * AI
 * Personalization
 * Revision
@@ -115,11 +141,13 @@ Responsibilities:
 * Teacher features
 * Parent features
 
+The Student Application is the primary learning experience.
+
 ---
 
 ## Backend API
 
-```text id="9g9xgc"
+```text
 https://api.aspirian.pk
 ```
 
@@ -130,7 +158,9 @@ Responsibilities:
 * Business logic
 * Database access
 * Student services
+* Academic services
 * Question services
+* Practice services
 * Test services
 * AI orchestration
 * Analytics
@@ -143,13 +173,13 @@ The API should be treated as a separate application/service boundary.
 
 # 4. High-Level Architecture
 
-```text id="6r4x6y"
+```text
                        ┌─────────────────────┐
                        │     ASPIRIAN.PK     │
                        │      WordPress      │
                        └──────────┬──────────┘
                                   │
-                         Discovery / Content
+                           Discovery / Content
                                   │
                                   ▼
                        ┌─────────────────────┐
@@ -162,31 +192,56 @@ The API should be treated as a separate application/service boundary.
                                   ▼
                        ┌─────────────────────┐
                        │   API.ASPIRIAN.PK   │
-                       │    Backend API      │
+                       │    Laravel Backend  │
                        └──────────┬──────────┘
                                   │
-                ┌─────────────────┼─────────────────┐
-                │                 │                 │
-                ▼                 ▼                 ▼
-        ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
-        │  Database   │   │ AI Services │   │ File/Media  │
-        │             │   │             │   │   Storage   │
-        └─────────────┘   └─────────────┘   └─────────────┘
+              ┌───────────────────┼───────────────────┐
+              │                   │                   │
+              ▼                   ▼                   ▼
+       ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+       │  Database   │     │ AI Services │     │ File/Media  │
+       │             │     │             │     │   Storage   │
+       └─────────────┘     └─────────────┘     └─────────────┘
+```
+
+The architecture follows a layered model:
+
+```text
+Presentation
+     ↓
+API / Application Interface
+     ↓
+Application / Business Logic
+     ↓
+Domain Services
+     ↓
+Data Access
+     ↓
+Database / External Services
 ```
 
 ---
 
 # 5. Architectural Principles
 
-The system will follow these principles:
+The system will follow these principles.
 
 ## 5.1 Modular
 
 Each major feature should have clear boundaries.
 
+Modules should have defined responsibilities and should avoid unnecessary coupling.
+
 ## 5.2 API-Driven
 
 Frontend applications should communicate with the backend through documented APIs.
+
+The same backend services should eventually support:
+
+* Web
+* Android
+* iOS
+* Other approved clients
 
 ## 5.3 Secure by Design
 
@@ -208,13 +263,30 @@ Business logic should be independently testable.
 
 Important architectural decisions should be documented before implementation.
 
+## 5.8 Reusable Learning Architecture
+
+Educational entities should be reusable across multiple learning experiences.
+
+A Question Bank question may be reused by:
+
+* Formal Tests
+* Practice
+* Revision
+* Assignments
+* Interactive Activities
+* Other approved learning experiences
+
+without unnecessarily duplicating the question.
+
+## 5.9 Future-Ready Without Premature Complexity
+
+The architecture should provide extension points for future functionality without creating unnecessary tables, services, or infrastructure before they are actually required.
+
 ---
 
-**# 6. Recommended Technology Direction**
+# 6. Recommended Technology Direction
 
 The technology stack for the Aspirian Student Platform is based on the current approved implementation direction.
-
-The current technology direction is:
 
 ```text
 Frontend
@@ -274,17 +346,19 @@ Deployment
     ↓
 
 Linux VPS / Cloud Infrastructure
-
 ```
+
+The current primary application stack is:
+
+**Laravel 12 / PHP with MariaDB 10.6.5**
 
 Technology choices must remain aligned with the actual application implementation and approved architecture decisions.
 
-The current primary application stack is **Laravel 12 / PHP with MariaDB 10.6.5**.
-
 Any future change to the primary database or core technology stack must be reviewed and formally approved before implementation.
 
-**---**
+The architecture should also remain compatible with Laravel's standard application organization and testing approach. Laravel supports API-backend applications as well as JavaScript-based frontends and provides structured application directories for controllers, models, jobs, policies, tests, and related application code.
 
+---
 
 # 7. Frontend Architecture
 
@@ -296,21 +370,33 @@ The frontend will be responsible for:
 * Forms
 * Dashboards
 * Test interface
+* Practice interface
 * Learning interface
 * AI interaction
 * Media experience
+* Progress visualization
 
 The frontend should not directly access the database.
 
-```text id="4t5p3s"
+```text
 Frontend
+
     ↓
+
 API
+
     ↓
+
 Business Logic
+
     ↓
+
 Database
 ```
+
+The frontend should also not contain authoritative educational evaluation logic.
+
+For example, the frontend may display whether an answer is correct, but the authoritative evaluation must be performed by trusted backend logic.
 
 ---
 
@@ -318,8 +404,9 @@ Database
 
 Potential frontend areas:
 
-```text id="4e8r8p"
+```text
 /
+
 ├── Landing
 ├── Authentication
 ├── Dashboard
@@ -328,6 +415,7 @@ Potential frontend areas:
 ├── Chapters
 ├── Topics
 ├── Questions
+├── Practice
 ├── Tests
 ├── Results
 ├── Revision
@@ -343,6 +431,26 @@ Potential frontend areas:
 
 Teacher, parent, school, and administration areas should have separate protected routes/interfaces.
 
+The Practice area should support different interfaces according to question type and learner level.
+
+For example:
+
+```text
+Early Years
+    ↓
+Picture / Alphabet / Matching / Simple Interaction
+
+Middle Grades
+    ↓
+MCQ / Matching / Language / Fill Blank / Ordering
+
+Secondary Grades
+    ↓
+MCQ / Short / Long / Translation / Subject-Specific Questions
+```
+
+The frontend must not hard-code the entire practice experience around one question type.
+
 ---
 
 # 9. Backend Architecture
@@ -351,8 +459,9 @@ The backend will contain the main business logic.
 
 Major backend domains:
 
-```text id="v4c1mb"
+```text
 Backend
+
 │
 ├── Authentication
 ├── Users
@@ -363,10 +472,13 @@ Backend
 ├── Questions
 ├── Question Validation
 ├── Duplicate Detection
+├── Universal Practice Engine
+├── Practice Evaluation
 ├── Tests
 ├── Attempts
 ├── Results
 ├── Student Learning Profile
+├── Learning Activities
 ├── Revision
 ├── Analytics
 ├── AI
@@ -381,6 +493,10 @@ Backend
 ├── Parents
 └── Administration
 ```
+
+The Universal Practice Engine is an application-level learning domain around the existing Question Bank.
+
+It should not become a duplicate Question Bank.
 
 ---
 
@@ -399,6 +515,8 @@ This provides:
 
 The architecture should maintain clean internal boundaries so selected services can later be extracted if scale requires it.
 
+The initial implementation should prioritize correctness, maintainability, testing, and clear domain boundaries over premature distributed infrastructure.
+
 ---
 
 # 11. Future Service Extraction
@@ -407,9 +525,11 @@ If a component becomes large enough, it may be separated.
 
 Potential future services:
 
-```text id="2k7c7d"
+```text
 Main API
+
    │
+
    ├── AI Service
    ├── Search Service
    ├── Media Processing Service
@@ -418,11 +538,20 @@ Main API
    └── Analytics Service
 ```
 
-This should happen only when justified by scale or operational requirements.
+The Universal Practice Engine may remain inside the main application unless actual scale or operational requirements justify extraction.
+
+Service extraction should happen only when justified by:
+
+* Scale
+* Performance
+* Security isolation
+* Independent deployment needs
+* Operational requirements
+* Team ownership boundaries
 
 ---
 
-**## 12. Database Architecture**
+# 12. Database Architecture
 
 The Aspirian Student Platform uses a relational database architecture based on **MariaDB 10.6.5**.
 
@@ -434,10 +563,11 @@ The database architecture must support:
 * Teachers and parents
 * Schools
 * Educational content
-* Question bank
+* Question Bank
 * Tests and assessments
 * Results and performance
 * Learning progress
+* Practice
 * Revision
 * AI-related data
 * Media metadata
@@ -445,7 +575,7 @@ The database architecture must support:
 * Subscriptions and payments
 * Audit and system records
 
-**### Database Principles**
+## Database Principles
 
 The implementation must follow:
 
@@ -463,32 +593,70 @@ The implementation must follow:
 
 The database schema must be implemented incrementally according to the approved development roadmap rather than creating all future tables at once.
 
-**---**
+The database architecture is documented in `DATABASE.md`.
 
+The database should model the educational system rather than only the current feature list.
+
+---
 
 # 13. Academic Data Model
 
 The academic structure should be hierarchical.
 
-```text id="x3wq0p"
+```text
 Education System
+
       ↓
+
 Board
+
       ↓
+
 Academic Session
+
       ↓
+
 Grade
+
       ↓
+
 Subject
+
       ↓
+
 Book / Course
+
       ↓
+
 Chapter
+
       ↓
+
 Topic
 ```
 
-This must support Nursery–12 without hard-coded assumptions.
+The Grade structure must support:
+
+```text
+Nursery
+Prep
+Class 1
+Class 2
+Class 3
+Class 4
+Class 5
+Class 6
+Class 7
+Class 8
+Class 9
+Class 10
+Class 11
+Class 12
+```
+
+The application must not hard-code assumptions that limit the platform to only secondary or higher-secondary classes.
+
+Boards, academic sessions, subjects, and educational structures should remain data-driven.
 
 ---
 
@@ -501,6 +669,7 @@ A single topic may connect to:
 * Notes
 * Questions
 * Tests
+* Practice
 * Videos
 * Flashcards
 * Practicals
@@ -510,18 +679,22 @@ A single topic may connect to:
 
 Example:
 
-```text id="kgf2wq"
+```text
 Topic
+
  │
+
  ├── Notes
- ├── MCQs
- ├── Short Questions
- ├── Long Questions
+ ├── Questions
+ ├── Practice
+ ├── Tests
  ├── Flashcards
  ├── Practical
  ├── Video
- └── Test
+ └── Activities
 ```
+
+The same educational content should be reusable across multiple learning experiences where appropriate.
 
 ---
 
@@ -534,85 +707,506 @@ A question may have:
 * Type
 * Text
 * Options
-* Correct answer
+* Correct answer data
 * Explanation
 * Marks
 * Difficulty
-* Board
-* Class
+* Grade
 * Subject
 * Chapter
 * Topic
+* Board
+* Academic session
 * Source
 * Review status
 * Version
 * Duplicate detection metadata
+* Media references
+* Tags
+
+The conceptual question architecture must remain extensible.
+
+The system should not create a separate primary Question table for every question type.
 
 ---
 
-# 16. Question Generation Pipeline
+# 16. Universal Practice Question Types
+
+The Universal Practice Engine should support an extensible family of question interactions.
+
+## Traditional
+
+* MCQ
+* Short Answer
+* Long Answer
+* Fill in the Blank
+* True / False
+* Yes / No
+* Multiple Select
+* Correct Word
+* Spelling
+
+## Matching
+
+* Matching
+* Drag and Drop Matching
+* Alphabet Matching
+* Haroof-e-Tahajji Matching
+* Word Matching
+* Picture-to-Word Matching
+* Word-to-Picture Matching
+
+## Language
+
+* English → Urdu
+* Urdu → English
+* Translation
+* Word Meaning
+* Sentence Formation
+
+## Early Years
+
+* Alphabet Recognition
+* Haroof-e-Tahajji Recognition
+* Missing Letter
+* Missing Harf
+* Picture Identification
+* Picture Selection
+* Picture Matching
+* Word Matching
+* Simple True / False
+* Simple Yes / No
+* Simple Drag and Drop
+
+## Image-Based
+
+* Image Identification
+* Image Selection
+* Image-Based MCQ
+* Picture-to-Word
+* Word-to-Picture
+* Picture Matching
+* Image-Based Matching
+
+## Interactive
+
+* Drag and Drop
+* Matching
+* Ordering / Arrange
+* Multiple Selection
+* Interactive Choice
+
+## Future Audio / Listening
+
+* Listen and Select
+* Listen and Match
+* Listening Comprehension
+* Audio-to-Word
+* Audio-to-Picture
+
+The architecture should allow new interaction types to be added without creating a completely separate learning system.
+
+---
+
+# 17. Universal Practice Engine Architecture
+
+The Universal Practice Engine is a reusable learning layer built around the Question Bank.
+
+```text
+                    QUESTION BANK
+
+                         │
+
+                         ▼
+
+                ┌───────────────────┐
+                │ Universal Practice│
+                │      Engine       │
+                └─────────┬─────────┘
+                          │
+          ┌───────────────┼────────────────┐
+          │               │                │
+          ▼               ▼                ▼
+       Selection       Evaluation       Progress
+          │               │                │
+          └───────────────┼────────────────┘
+                          │
+                          ▼
+                  Learning Activity
+                          │
+                          ▼
+                  Student Learning
+```
+
+The Practice Engine should provide:
+
+* Practice session initialization
+* Question selection
+* Question ordering
+* Question presentation metadata
+* Answer submission
+* Server-side answer evaluation
+* Immediate feedback
+* Explanation display where appropriate
+* Correct/wrong tracking
+* Unanswered/skipped tracking
+* Completion tracking
+* Topic-wise progress
+* Practice performance data
+* Learning activity recording where required
+
+---
+
+# 18. Practice and Formal Test Separation
+
+Practice and formal assessment are related but different learning experiences.
+
+## Formal Test
+
+```text
+Test
+ ↓
+Test Attempt
+ ↓
+Answers
+ ↓
+Submission
+ ↓
+Result
+ ↓
+Formal Result History
+```
+
+## Practice
+
+```text
+Question Bank
+ ↓
+Practice Session
+ ↓
+Question
+ ↓
+Answer
+ ↓
+Immediate Evaluation
+ ↓
+Feedback
+ ↓
+Learning Activity / Progress
+```
+
+Practice should not unnecessarily create formal `TestAttempt` or `TestResult` records.
+
+This prevents practice activity from polluting formal examination history.
+
+A Practice configuration may reuse questions that are also available in formal tests, but the learning experience and persistence model remain conceptually separate.
+
+---
+
+# 19. Practice Question Selection
+
+The Practice Engine should eventually support question selection based on:
+
+* Grade
+* Subject
+* Chapter
+* Topic
+* Question type
+* Difficulty
+* Board
+* Academic session
+* Learning objective
+* Weak topic
+* Previous mistakes
+* Revision priority
+* Student progress
+* Teacher-selected criteria
+* AI-generated recommendations where approved
+
+Question selection should remain server-controlled.
+
+The frontend should not decide which questions are educationally valid for a student without backend validation.
+
+---
+
+# 20. Practice Evaluation
+
+Answer evaluation should be type-aware.
+
+Examples:
+
+```text
+MCQ
+    ↓
+Option comparison
+
+True / False
+    ↓
+Boolean / option comparison
+
+Fill in the Blank
+    ↓
+Accepted answer comparison
+
+Matching
+    ↓
+Pair validation
+
+Ordering
+    ↓
+Sequence validation
+
+Translation
+    ↓
+Accepted answer / evaluation rules
+
+Drag & Drop
+    ↓
+Mapping validation
+```
+
+The evaluation system should be extensible.
+
+A single generic comparison method should not be assumed to work for every future question type.
+
+Correct answers must not be exposed to the learner before the appropriate evaluation stage.
+
+---
+
+# 21. Practice Learning Flow
+
+The standard practice flow should be:
+
+```text
+Student
+
+   ↓
+
+Select Grade / Subject / Topic
+
+   ↓
+
+Choose Practice
+
+   ↓
+
+Practice Configuration
+
+   ↓
+
+Question Selection
+
+   ↓
+
+Question Display
+
+   ↓
+
+Student Answer
+
+   ↓
+
+Server Evaluation
+
+   ↓
+
+Immediate Feedback
+
+   ↓
+
+Next Question
+
+   ↓
+
+Practice Completion
+
+   ↓
+
+Performance Summary
+
+   ↓
+
+Learning Activity / Progress
+
+   ↓
+
+Weak Topic / Revision Logic
+```
+
+For younger learners, the flow may include visual and interactive experiences.
+
+For older learners, the flow may include text-based academic questions and subject-specific interactions.
+
+---
+
+# 22. Student Intelligence Layer
+
+Student intelligence should be a dedicated application domain.
+
+It will process:
+
+* Test results
+* Question attempts
+* Practice activity
+* Mistakes
+* Revision activity
+* Learning activity
+* Topic mastery
+
+It may produce:
+
+* Weak topics
+* Strong topics
+* Revision priorities
+* Recommendations
+* Performance trends
+* Practice recommendations
+* Personalized learning suggestions
+
+Practice data should contribute to student intelligence only according to approved learning rules.
+
+---
+
+# 23. Learning Activity Architecture
+
+Learning activities provide a common way to record meaningful student learning events.
+
+Potential activity types include:
+
+```text
+Reading
+Video
+Test
+Practice
+Revision
+Flashcard
+Activity
+Coding
+```
+
+Practice-related events may include:
+
+```text
+Practice Session Started
+Question Attempted
+Question Answered
+Question Skipped
+Question Checked
+Correct Answer
+Incorrect Answer
+Practice Session Completed
+Topic Practiced
+```
+
+Learning activities are learning records, not automatically formal examination results.
+
+A persistent dedicated Practice Session table should only be introduced if long-term history, analytics, synchronization, or cross-device recovery requires it.
+
+---
+
+# 24. Question Generation Pipeline
 
 AI-generated questions should pass through controlled processing.
 
-```text id="x2s6zq"
+```text
 Educational Source
+
        ↓
+
 Content Extraction
+
        ↓
+
 AI Generation
+
        ↓
+
 Validation
+
        ↓
+
 Duplicate Detection
+
        ↓
+
 Quality Evaluation
+
        ↓
+
 Human Review
+
        ↓
+
 Approved Question
+
+       ↓
+
+Question Bank
 ```
 
 AI-generated material should not automatically become trusted educational content.
 
+The same approval principles apply to AI-generated Practice questions.
+
 ---
 
-# 17. Knowledge Retrieval Architecture
+# 25. Knowledge Retrieval Architecture
 
 The AI Tutor should use a retrieval-based architecture.
 
-```text id="fmy7ri"
+```text
 Student Question
+
        ↓
+
 Intent Detection
+
        ↓
+
 Search / Retrieval
+
        ↓
+
 Relevant Knowledge
+
        ↓
+
 Context Construction
+
        ↓
+
 AI Generation
+
        ↓
+
 Response
 ```
 
 The retrieval layer should be designed so it can evolve from database search to vector/semantic search when required.
 
+Practice recommendations may eventually use the same knowledge and student-intelligence layers.
+
 ---
 
-# 18. AI Service Layer
+# 26. AI Service Layer
 
 The application should not tightly couple business logic to one AI provider.
 
 Instead:
 
-```text id="q2a8ru"
+```text
 Aspirian Application
+
         ↓
+
 AI Service Interface
+
         ↓
+
 AI Provider Adapter
+
         ↓
+
 Selected AI Provider
 ```
 
@@ -620,7 +1214,7 @@ This allows future provider changes without rewriting the entire platform.
 
 ---
 
-# 19. AI Capabilities
+# 27. AI Capabilities
 
 The AI layer may eventually support:
 
@@ -639,57 +1233,78 @@ The AI layer may eventually support:
 * Flashcard Generation
 * AI Viva
 * Handwritten Answer Assistance
+* Practice Recommendations
+* Adaptive Question Selection
+
+AI-generated educational content must remain subject to validation and approval rules.
 
 ---
 
-# 20. Student Intelligence Layer
+# 28. Mistakes & Revision Architecture
 
-Student intelligence should be a dedicated application domain.
-
-It will process:
-
-* Test results
-* Question attempts
-* Mistakes
-* Revision activity
-* Learning activity
-* Topic mastery
-
-It may produce:
-
-* Weak topics
-* Strong topics
-* Revision priorities
-* Recommendations
-* Performance trends
-
----
-
-# 21. Mistakes & Revision Architecture
-
-```text id="h8ks0h"
+```text
 Question Attempt
+
       ↓
-Result
+
+Evaluation
+
       ↓
+
 Wrong Answer?
+
       ↓
+
 Yes
+
       ↓
+
 Mistake Record
+
       ↓
+
 Topic Association
+
       ↓
+
 Weakness Score
+
       ↓
+
 Revision Priority
+
       ↓
+
 Personalized Queue
+
+      ↓
+
+Practice / Revision
 ```
 
+The Revision Queue may direct the student back into Practice.
+
+Example:
+
+```text
+Weak Topic
+    ↓
+Revision Queue
+    ↓
+Practice This Topic
+    ↓
+Universal Practice Engine
+    ↓
+New Learning Evidence
+    ↓
+Updated Progress
+```
+
+This creates a continuous learning loop.
+
 ---
 
-# 22. Assessment Architecture
+# 29. Assessment Architecture
 
 The assessment system should separate:
 
@@ -703,27 +1318,43 @@ The assessment system should separate:
 
 This separation will allow multiple students to take the same test while maintaining independent attempts.
 
+Formal assessment and Practice remain separate learning experiences even when they reuse the same Question Bank.
+
 ---
 
-# 23. Coding Lab Architecture
+# 30. Coding Lab Architecture
 
 Code execution must be isolated from the main application.
 
-```text id="wl0n0b"
+```text
 Student
+
    ↓
+
 Code Editor
+
    ↓
+
 API
+
    ↓
+
 Code Execution Queue
+
    ↓
+
 Sandbox
+
    ↓
+
 Execution
+
    ↓
+
 Output / Error
+
    ↓
+
 Student
 ```
 
@@ -740,7 +1371,7 @@ The coding environment must never execute untrusted student code directly on the
 
 ---
 
-# 24. Media Architecture
+# 31. Media Architecture
 
 Educational media may include:
 
@@ -749,16 +1380,24 @@ Educational media may include:
 * Podcasts
 * Live streams
 * YouTube content
+* Images
+* Educational documents
 
 The initial live video strategy will use YouTube.
 
-```text id="h2z7ds"
+```text
 Aspirian
+
    ↓
+
 YouTube Channel
+
    ↓
+
 YouTube Live
+
    ↓
+
 Student Platform Integration
 ```
 
@@ -766,19 +1405,25 @@ The platform should store metadata and references rather than unnecessarily dupl
 
 ---
 
-# 25. Internet Radio Architecture
+# 32. Internet Radio Architecture
 
 The Internet Radio should initially use a dedicated streaming solution rather than being tightly coupled to the main application server.
 
 Possible architecture:
 
-```text id="p8x4jd"
+```text
 Audio Source
+
     ↓
+
 Streaming Server / Provider
+
     ↓
+
 Internet Radio
+
     ↓
+
 Aspirian Player
 ```
 
@@ -791,58 +1436,91 @@ The application should store:
 
 ---
 
-# 26. Audio Processing Architecture
+# 33. Audio Processing Architecture
 
-```text id="r5g7cc"
+```text
 Audio
+
   ↓
+
 Speech-to-Text
+
   ↓
+
 Transcript
+
   ↓
+
 AI Processing
+
   ↓
+
 Notes / Summary / Questions
+
   ↓
+
 Student
 ```
 
+Audio processing may eventually integrate with listening-based Practice question generation.
+
 ---
 
-# 27. Video Intelligence Architecture
+# 34. Video Intelligence Architecture
 
-```text id="0j0z7n"
+```text
 Video
+
   ↓
+
 Transcript
+
   ↓
+
 Topic Detection
+
   ↓
+
 Key Concepts
+
   ↓
+
 Quiz Generation
+
   ↓
+
 Flashcards
+
   ↓
+
 Notes
 ```
 
 This processing may be asynchronous.
 
+Generated questions must pass through the normal validation and approval pipeline.
+
 ---
 
-# 28. Notification Architecture
+# 35. Notification Architecture
 
 Notifications should use a queue-based approach when scale increases.
 
-```text id="4m6h1z"
+```text
 Application Event
+
       ↓
+
 Notification Service
+
       ↓
+
 Queue
+
       ↓
+
 Delivery
+
  ┌────┼────┐
  ↓    ↓    ↓
 Email Push In-App
@@ -850,7 +1528,7 @@ Email Push In-App
 
 ---
 
-# 29. File Storage
+# 36. File Storage
 
 Large files should not be stored directly inside the application database.
 
@@ -862,12 +1540,13 @@ Use object storage for:
 * Generated documents
 * Educational media
 * User uploads
+* Practice media
 
 The database should store metadata and secure references.
 
 ---
 
-# 30. Caching
+# 37. Caching
 
 Caching may be used for frequently accessed data such as:
 
@@ -882,9 +1561,11 @@ Redis may be introduced where justified.
 
 Caching must never compromise data correctness.
 
+Student-specific learning data must not accidentally be served across users through improperly scoped caching.
+
 ---
 
-# 31. Background Jobs
+# 38. Background Jobs
 
 Long-running operations should not block normal web requests.
 
@@ -898,12 +1579,13 @@ Examples:
 * Email sending
 * Report generation
 * Analytics processing
+* Large-scale Practice question preparation
 
 These tasks should use background queues.
 
 ---
 
-# 32. Search Architecture
+# 39. Search Architecture
 
 Initial search may use the primary database.
 
@@ -916,12 +1598,14 @@ Potential future capabilities:
 * Filters
 * Semantic search
 * Knowledge retrieval
+* Question search
+* Practice question discovery
 
 Search architecture should remain replaceable.
 
 ---
 
-# 33. Authentication Architecture
+# 40. Authentication Architecture
 
 Authentication will be managed by the backend.
 
@@ -944,45 +1628,75 @@ should be implemented only when required.
 
 ---
 
-# 34. Authorization Architecture
+# 41. Authorization Architecture
 
 Authorization must be enforced server-side.
 
 Example:
 
-```text id="6w8j8g"
+```text
 User
- ↓
+
+  ↓
+
 Role
- ↓
+
+  ↓
+
 Permission
- ↓
+
+  ↓
+
 Resource Access
 ```
 
 Frontend restrictions alone are not sufficient for security.
 
+This applies especially to:
+
+* Student records
+* Questions
+* Correct answers
+* Test results
+* Practice evaluation
+* Teacher resources
+* Parent resources
+* School resources
+* Administrative functions
+
 ---
 
-# 35. API Architecture
+# 42. API Architecture
 
 All application communication should use documented APIs.
 
 Example:
 
-```text id="l4j3d4"
+```text
 Frontend
+
    ↓
+
 HTTPS
+
    ↓
+
 API
+
    ↓
+
 Authentication
+
    ↓
+
 Authorization
+
    ↓
+
 Business Logic
+
    ↓
+
 Database / Services
 ```
 
@@ -990,25 +1704,27 @@ API specifications will be documented separately in `API.md`.
 
 ---
 
-# 36. API Versioning
+# 43. API Versioning
 
 The API should support versioning.
 
 Example:
 
-```text id="g9o0xk"
+```text
 /api/v1/
 ```
 
 Future breaking changes can use:
 
-```text id="zq7j3d"
+```text
 /api/v2/
 ```
 
+The Universal Practice Engine APIs should follow the same versioning policy.
+
 ---
 
-# 37. Security Architecture
+# 44. Security Architecture
 
 Security controls should include:
 
@@ -1026,9 +1742,11 @@ Security controls should include:
 * Backup strategy
 * Secret management
 
+Correct answers and protected educational content must never be exposed simply because they are present in frontend payloads.
+
 ---
 
-# 38. AI Security
+# 45. AI Security
 
 AI endpoints should include protections against:
 
@@ -1041,9 +1759,11 @@ AI endpoints should include protections against:
 
 AI usage should be monitored and rate-limited.
 
+AI should not be trusted as an unrestricted authority over educational content.
+
 ---
 
-# 39. Observability
+# 46. Observability
 
 The system should eventually provide:
 
@@ -1053,13 +1773,16 @@ The system should eventually provide:
 * Queue monitoring
 * Database monitoring
 * AI usage metrics
+* Practice usage metrics
 * Performance monitoring
 
 Errors should be traceable across services.
 
+Important Practice and assessment failures should be diagnosable without exposing sensitive student information unnecessarily.
+
 ---
 
-# 40. Audit Logging
+# 47. Audit Logging
 
 Important actions should be recorded.
 
@@ -1073,28 +1796,35 @@ Examples:
 * Test creation
 * Administrative changes
 * Subscription changes
+* Important Practice configuration changes
 
 Audit logs should be protected from unauthorized modification.
 
 ---
 
-# 41. Environment Strategy
+# 48. Environment Strategy
 
 Separate environments should be maintained.
 
-```text id="j1s2cx"
+```text
 Development
+
      ↓
+
 Testing / Staging
+
      ↓
+
 Production
 ```
 
 Production credentials and data must never be used casually in development.
 
+Practice, test, and student data should be isolated appropriately between environments.
+
 ---
 
-# 42. Configuration Management
+# 49. Configuration Management
 
 Environment-specific configuration should use environment variables or secure configuration management.
 
@@ -1111,21 +1841,31 @@ Examples:
 
 ---
 
-# 43. Deployment Architecture
+# 50. Deployment Architecture
 
 Initial deployment may use:
 
-```text id="l3e4qf"
+```text
 Internet
+
    ↓
+
 DNS
+
    ↓
+
 Reverse Proxy
+
    ↓
+
 Application Server
+
    ↓
+
 Backend
+
    ↓
+
 Database
 ```
 
@@ -1133,7 +1873,7 @@ As the platform grows, components can be separated.
 
 ---
 
-# 44. Scaling Strategy
+# 51. Scaling Strategy
 
 Initial scaling:
 
@@ -1145,21 +1885,27 @@ Later:
 
 **Horizontal Scaling**
 
-```text id="r4y9s3"
+```text
 Load Balancer
+
       ↓
+
  ┌────┼────┐
  ↓    ↓    ↓
 App1 App2 App3
+
       ↓
- Shared Services
+
+Shared Services
 ```
 
 Stateless application design should be preferred where practical.
 
+Practice and API services should avoid unnecessary server-local state so future horizontal scaling remains possible.
+
 ---
 
-# 45. Database Scaling
+# 52. Database Scaling
 
 Potential future strategies:
 
@@ -1174,7 +1920,7 @@ Database scaling should be introduced based on actual performance requirements.
 
 ---
 
-# 46. CDN Strategy
+# 53. CDN Strategy
 
 A CDN may be used for:
 
@@ -1188,7 +1934,7 @@ Private student resources must use appropriate access controls.
 
 ---
 
-# 47. Backup Architecture
+# 54. Backup Architecture
 
 Backups should cover:
 
@@ -1204,9 +1950,11 @@ The backup strategy should include:
 * Off-site backup
 * Recovery testing
 
+Practice and student learning records should be included in the database backup strategy.
+
 ---
 
-# 48. Disaster Recovery
+# 55. Disaster Recovery
 
 The platform should eventually document:
 
@@ -1217,35 +1965,47 @@ The platform should eventually document:
 * Database recovery
 * Critical service dependencies
 
+Recovery procedures should preserve important historical educational and student learning data.
+
 ---
 
-# 49. Integration with Aspirian.pk
+# 56. Integration with Aspirian.pk
 
 The WordPress website and Student Platform may exchange selected information through controlled APIs or links.
 
 Examples:
 
-```text id="v7x6m2"
+```text
 Aspirian.pk
+
     ↓
+
 "Practice This Topic"
+
     ↓
+
 app.aspirian.pk
 ```
 
-```text id="s7h2q9"
+```text
 app.aspirian.pk
+
     ↓
+
 "Read Full Article"
+
     ↓
+
 aspirian.pk
 ```
 
 The systems should remain independently deployable.
 
+Public content may introduce students to the Student Platform, while the Student Platform may link students back to public educational resources.
+
 ---
 
-# 50. Integration with YouTube
+# 57. Integration with YouTube
 
 YouTube may provide:
 
@@ -1260,31 +2020,39 @@ The application should not depend entirely on YouTube for core educational data.
 
 ---
 
-# 51. Mobile Architecture
+# 58. Mobile Architecture
 
 Future mobile applications should consume the same API.
 
-```text id="d2c9e4"
+```text
                     Backend API
+
                    /     |     \
+
                   /      |      \
+
                  ↓       ↓       ↓
-              Web      Android   iOS
+
+              Web     Android   iOS
 ```
 
 This avoids maintaining separate business logic for each platform.
 
+The Universal Practice Engine should expose reusable backend behavior so mobile applications can support the same learning rules as the web application.
+
 ---
 
-# 52. Multi-Tenant Future Architecture
+# 59. Multi-Tenant Future Architecture
 
 School functionality may eventually require multi-tenancy.
 
 Possible structure:
 
-```text id="p4k1nc"
+```text
 Platform
+
    │
+
    ├── School A
    │    ├── Teachers
    │    └── Students
@@ -1300,15 +2068,19 @@ Platform
 
 Tenant boundaries must be enforced at the backend and database levels.
 
+The Universal Practice Engine must respect tenant boundaries where school-specific content or question banks are introduced.
+
 ---
 
-# 53. Content Versioning
+# 60. Content Versioning
 
 Educational content must support versions.
 
-```text id="8k8q3x"
+```text
 Content
+
    │
+
    ├── Version 1
    ├── Version 2
    └── Version 3
@@ -1320,27 +2092,37 @@ This is important when:
 * Textbooks change
 * Academic sessions change
 * Corrections are made
+* Question versions change
+
+Question revisions and approved content versions should preserve educational history where required.
 
 ---
 
-# 54. Feature Flags
+# 61. Feature Flags
 
 Future functionality may use feature flags.
 
 Examples:
 
-```text id="d9z4mk"
+```text
 AI Tutor: ON
+
 Coding Lab: OFF
+
 Virtual Lab: OFF
+
 Study Rooms: OFF
+
+Audio Practice: OFF
 ```
 
 This allows controlled rollout of new functionality.
 
+New Practice interaction types may also be introduced behind feature flags when appropriate.
+
 ---
 
-# 55. Performance Goals
+# 62. Performance Goals
 
 The platform should aim for:
 
@@ -1350,12 +2132,16 @@ The platform should aim for:
 * Lazy loading for large resources
 * Efficient caching
 * Asynchronous heavy processing
+* Efficient question selection
+* Fast answer evaluation
 
 Exact performance targets will be defined during implementation and testing.
 
+Practice evaluation should remain responsive for normal question interactions, while expensive operations such as AI generation or media processing should be asynchronous.
+
 ---
 
-# 56. Accessibility
+# 63. Accessibility
 
 The interface should consider:
 
@@ -1366,12 +2152,15 @@ The interface should consider:
 * Clear navigation
 * Accessible forms
 * Appropriate media controls
+* Accessible interactive elements
 
 Accessibility should be considered especially for younger learners.
 
+Interactive Practice questions must provide accessible alternatives where practical.
+
 ---
 
-# 57. Internationalization
+# 64. Internationalization
 
 The architecture should eventually support:
 
@@ -1383,9 +2172,11 @@ The system should avoid hard-coding interface text into application logic.
 
 Future languages can be added through localization resources.
 
+Question content and educational answers should also be capable of supporting multilingual data where required.
+
 ---
 
-# 58. Localization
+# 65. Localization
 
 The platform should support:
 
@@ -1396,140 +2187,248 @@ The platform should support:
 * Local date/time conventions
 * Appropriate regional educational requirements
 
+The Universal Practice Engine should support language-specific interaction types without creating separate practice systems for each language.
+
 ---
 
-# 59. Development Workflow
+# 66. Development Workflow
 
 The development lifecycle will be:
 
-```text id="0l1z9x"
+```text
 Requirement
+
     ↓
+
 Specification
+
     ↓
+
 Architecture
+
     ↓
+
 Database
+
     ↓
+
 API
+
     ↓
+
 Implementation
+
     ↓
+
 Testing
+
     ↓
+
 Review
+
     ↓
+
 Documentation
+
     ↓
+
 Deployment
 ```
 
+For individual features, implementation should follow a controlled sequence:
+
+```text
+Requirement
+    ↓
+Existing Architecture Check
+    ↓
+Existing Schema / Code Check
+    ↓
+Minimal Implementation
+    ↓
+Automated Tests
+    ↓
+Browser / UI Verification
+    ↓
+Documentation
+    ↓
+Commit / Push
+```
+
+No new migration, table, service, or abstraction should be introduced merely because the long-term blueprint mentions it.
+
+It should be introduced when the current feature actually requires it.
+
 ---
 
-# 60. Architecture Decision Records
+# 67. Architecture Decision Records
 
 Important technology and architecture decisions should be documented.
 
 Examples:
 
 * Why Laravel?
-
 * Why MariaDB?
-
 * Why modular monolith?
-
 * Why separate API?
-
 * Why YouTube for initial live streaming?
-
 * Why object storage?
-
 * Why provider-agnostic AI?
+* Why Universal Practice Engine?
+* Why reuse the Question Bank for Practice?
+* Why Practice is separated from formal Test Results?
+* Why persistent Practice Session storage is deferred?
 
 Future decisions should be recorded rather than relying on memory.
 
 ---
 
-**# 61. Current Architectural Direction**
+# 68. Universal Practice Architecture Decision
 
-At this stage, the approved architecture is:
+The approved Practice architecture is:
 
-```text id="x8j7w4"
-
-                ┌──────────────────────┐
-
-                │      ASPIRIAN.PK     │
-
-                │      WordPress       │
-
-                └──────────┬───────────┘
-
-                           │
-
-                           │
-
-                ┌──────────▼───────────┐
-
-                │   APP.ASPIRIAN.PK     │
-
-                │   Web Application     │
-
-                └──────────┬───────────┘
-
-                           │
-
-                         HTTPS
-
-                           │
-
-                ┌──────────▼───────────┐
-
-                │   API.ASPIRIAN.PK     │
-
-                │   Laravel Backend     │
-
-                └──────────┬───────────┘
-
-                           │
-
-             ┌─────────────┼─────────────┐
-
-             │             │             │
-
-             ▼             ▼             ▼
-
-       MariaDB 10.6.5    Redis      Object Storage
-
+```text
+Question Bank
+      │
+      ├── Question Options
+      ├── Question Answers
+      ├── Media / Files
+      └── Tags
              │
-
-             │
-
              ▼
-
-       Student Learning Data
-
+      Universal Practice Engine
              │
-
+       ┌─────┴─────┐
+       │           │
+    Selection   Evaluation
+       │           │
+       └─────┬─────┘
              ▼
-
-        AI Service Layer
-
+      Learning Activity
+             │
+             ▼
+      Student Progress
+             │
+       ┌─────┴─────┐
+       ▼           ▼
+  Weak Topics   Mastery
+       │
+       ▼
+ Revision Queue
+       │
+       ▼
+ Practice / Revision
 ```
 
-**---**
+The Practice Engine initially reuses the existing Question Bank.
 
+There will be **no separate `practice_questions` table** unless future requirements prove that a dedicated persistent practice structure is necessary.
 
-# 62. Architecture Status
+A single Question Bank question may be reused across:
+
+```text
+Formal Tests
+Practice
+Revision
+Assignments
+Interactive Activities
+Other Learning Experiences
+```
+
+where appropriate.
+
+---
+
+# 69. Universal Practice Academic Coverage
+
+The Practice Engine must support the complete academic range:
+
+```text
+ASPIRIAN PRACTICE ENGINE
+
+├── Nursery
+├── Prep
+├── Class 1
+├── Class 2
+├── Class 3
+├── Class 4
+├── Class 5
+├── Class 6
+├── Class 7
+├── Class 8
+├── Class 9
+├── Class 10
+├── Class 11
+└── Class 12
+```
+
+The system must not create separate Practice Engines for different class groups.
+
+Instead:
+
+```text
+                Universal Practice Engine
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+      Early Years      Middle Grades    Secondary
+          │                │                │
+     Nursery/Prep       Class 1–8       Class 9–12
+```
+
+These are learning experience categories, not separate application architectures.
+
+---
+
+# 70. Future Practice Extensibility
+
+The Practice Engine should remain extensible for future interaction types such as:
+
+* Audio questions
+* Listening comprehension
+* Voice-based answers
+* Image recognition
+* Interactive diagrams
+* Drag-and-drop activities
+* Simulations
+* AI-assisted evaluation
+* Handwriting recognition
+* Speech recognition
+* Adaptive question selection
+* Personalized practice plans
+
+New interaction types should be integrated through extensible question configuration and evaluation rules rather than creating an entirely separate Practice application.
+
+---
+
+# 71. Architecture Status
 
 **File:** `ARCHITECTURE.md`
+
 **Phase:** B
+
 **Module:** B1 — System Architecture
 
-**Version:** 1.0
+**Version:** 1.1
 
-**Status:** Initial Architecture Blueprint
+**Status:** Master Architecture Blueprint — Updated for Universal Practice Architecture
 
 The architecture is intentionally designed to support the complete long-term Aspirian vision while allowing the first version to remain manageable.
+
+The architecture now explicitly defines:
+
+* Complete academic range from Nursery, Prep, Class 1 through Class 12
+* Reusable Question Bank architecture
+* Universal Practice Engine
+* Practice and Formal Test separation
+* Practice evaluation
+* Learning Activity integration
+* Weak Topic and Revision integration
+* Future interactive question types
+* Future audio/listening capabilities
+* Mobile compatibility
+* AI extensibility
+* Future service extraction
 
 The next technical design documents will define:
 
@@ -1542,8 +2441,123 @@ The next technical design documents will define:
 
 ---
 
-# Final Principle
+# 72. Current Architectural Direction
+
+At this stage, the approved architecture is:
+
+```text
+                    ┌──────────────────────┐
+                    │      ASPIRIAN.PK     │
+                    │      WordPress       │
+                    └──────────┬───────────┘
+                               │
+                               │
+                    ┌──────────▼───────────┐
+                    │   APP.ASPIRIAN.PK    │
+                    │   Web Application    │
+                    └──────────┬───────────┘
+                               │
+                             HTTPS
+                               │
+                    ┌──────────▼───────────┐
+                    │   API.ASPIRIAN.PK    │
+                    │    Laravel Backend   │
+                    └──────────┬───────────┘
+                               │
+               ┌───────────────┼────────────────┐
+               │               │                │
+               ▼               ▼                ▼
+        MariaDB 10.6.5       Redis       Object Storage
+               │
+               ▼
+        Academic Structure
+               │
+               ▼
+          Question Bank
+               │
+               ▼
+    Universal Practice Engine
+               │
+        ┌──────┼───────┐
+        ▼      ▼       ▼
+     Tests  Practice  Revision
+        │      │       │
+        └──────┼───────┘
+               ▼
+       Student Learning Data
+               │
+               ▼
+       Student Intelligence
+               │
+               ▼
+        AI Service Layer
+```
+
+---
+
+# 73. Architecture Rules for Current Development
+
+The following rules are now considered part of the approved architecture.
+
+1. Do not hard-code classes.
+2. Do not hard-code boards.
+3. Do not hard-code academic years.
+4. Do not assume every student uses the same question interaction.
+5. Do not create a separate Question table for every question type.
+6. Do not expose correct answers before the appropriate evaluation stage.
+7. Do not treat AI-generated content as automatically approved.
+8. Do not store large media files directly in MariaDB.
+9. Do not execute student code on the main application server.
+10. Do not rely on frontend authorization.
+11. Historical educational data should not be casually deleted.
+12. Question duplication must be checked before approval.
+13. Student learning data must be access-controlled.
+14. Practice data must not unnecessarily pollute formal test result history.
+15. Universal Practice Engine must remain extensible for future interaction types.
+16. Do not create unnecessary Practice-specific database duplication.
+17. Do not introduce future architecture components before they are required.
+18. Existing implementation must be inspected before introducing new migrations or structures.
+19. Business logic should remain testable independently of the frontend.
+20. Important architectural decisions should be documented.
+
+---
+
+# 74. Final Architecture Principle
 
 > **Build the first version simply, but design the foundation for the future.**
 
 Aspirian should start as a manageable modular platform and evolve into a large educational ecosystem without unnecessary architectural rewrites.
+
+The architecture should model the complete educational journey:
+
+```text
+Nursery
+   ↓
+Prep
+   ↓
+Class 1–12
+   ↓
+Learning
+   ↓
+Practice
+   ↓
+Assessment
+   ↓
+Progress
+   ↓
+Weakness Detection
+   ↓
+Revision
+   ↓
+Mastery
+   ↓
+Personalized Learning
+```
+
+The platform should therefore remain:
+
+**Universal, Modular, Reusable, Testable, Secure, Extensible, and Future-Ready.**
+
+The core architectural principle is:
+
+> **The architecture should model the educational system, not the current feature list.**
