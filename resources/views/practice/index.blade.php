@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -86,6 +87,7 @@
             color: #ffffff;
             text-decoration: none;
             font-weight: 600;
+            transition: background 0.2s ease;
         }
 
         .practice-button:hover {
@@ -109,6 +111,10 @@
             .practice-header h1 {
                 font-size: 26px;
             }
+
+            .topic-card {
+                padding: 18px;
+            }
         }
     </style>
 </head>
@@ -118,18 +124,24 @@
 <div class="practice-container">
 
     <div class="practice-header">
-        <h1>Practice</h1>
+
+        <h1>
+            Practice
+        </h1>
 
         <p>
             Choose a topic and practice questions
             from the Aspirian Question Bank.
         </p>
+
     </div>
 
     @if ($topics->isEmpty())
 
         <div class="empty-state">
+
             No published practice topics are available yet.
+
         </div>
 
     @else
@@ -145,30 +157,43 @@
                     </h2>
 
                     @if ($topic->chapter?->book?->subject)
+
                         <div class="subject">
+
                             Subject:
                             {{ $topic->chapter->book->subject->name }}
+
                         </div>
+
                     @endif
 
                     @if ($topic->chapter)
+
                         <div class="chapter">
+
                             Chapter:
                             {{ $topic->chapter->title }}
+
                         </div>
+
                     @endif
 
                     <div class="question-count">
+
                         {{ $topic->questions_count }}
+
                         published
-                        {{ $topic->questions_count === 1 ? 'question' : 'questions' }}
+
+                        {{ $topic->questions_count === 1
+                            ? 'question'
+                            : 'questions'
+                        }}
+
                     </div>
 
                     <a
-                        href="#"
+                        href="{{ route('practice.start', $topic) }}"
                         class="practice-button"
-                        aria-disabled="true"
-                        onclick="return false;"
                     >
                         Start Practice
                     </a>

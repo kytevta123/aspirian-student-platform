@@ -222,7 +222,65 @@ Route::get(
     ])
     ->name('practice.index');
 
-    /*
+/*
+|--------------------------------------------------------------------------
+| Practice Start
+|--------------------------------------------------------------------------
+|
+| Starts practice for the selected topic and loads
+| the first published question.
+|
+*/
+
+Route::get(
+    '/practice/{topic}/start',
+    [PracticeController::class, 'start']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('practice.start');
+
+/*
+|--------------------------------------------------------------------------
+| Practice Question
+|--------------------------------------------------------------------------
+|
+| Displays a specific published practice question.
+|
+*/
+
+Route::get(
+    '/practice/{topic}/question/{question}',
+    [PracticeController::class, 'show']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('practice.question');
+
+/*
+|--------------------------------------------------------------------------
+| Practice Answer
+|--------------------------------------------------------------------------
+|
+| Checks the student's answer and displays immediate feedback.
+|
+*/
+
+Route::post(
+    '/practice/{topic}/question/{question}/answer',
+    [PracticeController::class, 'submit']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('practice.answer');
+
+/*
 |--------------------------------------------------------------------------
 | Test Attempt Routes
 |--------------------------------------------------------------------------
