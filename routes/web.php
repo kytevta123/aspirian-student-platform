@@ -286,8 +286,25 @@ Route::post(
     ->name('tests.attempts.auto-submit');
 
 /*
+|--------------------------------------------------------------------------
+| Test Result History
+|--------------------------------------------------------------------------
+|
+| Shows the authenticated student's previous test results.
+|
+*/
 
-    /*
+Route::get(
+    '/test-results',
+    [TestResultController::class, 'index']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('tests.results.index');
+
+/*
 |--------------------------------------------------------------------------
 | Test Result
 |--------------------------------------------------------------------------
