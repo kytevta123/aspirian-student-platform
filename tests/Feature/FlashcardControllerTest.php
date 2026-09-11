@@ -102,12 +102,17 @@ class FlashcardControllerTest extends TestCase
 
     protected function createVerifiedUser(): User
     {
-        return User::create([
+        $user = User::create([
             'name' => 'Flashcard Student',
             'email' => 'flashcard' . uniqid() . '@example.com',
             'password' => Hash::make('password'),
-            'email_verified_at' => now(),
         ]);
+
+        $user->forceFill([
+            'email_verified_at' => now(),
+        ])->save();
+
+        return $user;
     }
 
     protected function createFlashcard(
