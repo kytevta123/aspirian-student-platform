@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FlashcardController;
+use App\Http\Controllers\FlashcardProgressController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\QuestionController;
@@ -279,6 +281,83 @@ Route::post(
         'verified',
     ])
     ->name('practice.answer');
+
+/*
+|--------------------------------------------------------------------------
+| Flashcard Routes
+|--------------------------------------------------------------------------
+|
+| Displays published flashcards and provides flashcard creation.
+|
+*/
+
+Route::get(
+    '/flashcards',
+    [FlashcardController::class, 'index']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('flashcards.index');
+
+Route::get(
+    '/flashcards/create',
+    [FlashcardController::class, 'create']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('flashcards.create');
+
+Route::post(
+    '/flashcards',
+    [FlashcardController::class, 'store']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('flashcards.store');
+
+/*
+|--------------------------------------------------------------------------
+| Flashcard Study
+|--------------------------------------------------------------------------
+|
+| Displays a published flashcard for student study.
+|
+*/
+
+Route::get(
+    '/flashcards/{flashcard}/study',
+    [FlashcardController::class, 'study']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('flashcards.study');
+
+/*
+|--------------------------------------------------------------------------
+| Flashcard Progress
+|--------------------------------------------------------------------------
+|
+| Saves the authenticated student's learning progress for a flashcard.
+|
+*/
+
+Route::post(
+    '/flashcards/{flashcard}/progress',
+    [FlashcardProgressController::class, 'store']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('flashcards.progress.store');
 
 /*
 |--------------------------------------------------------------------------
