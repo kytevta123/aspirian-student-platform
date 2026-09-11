@@ -1207,35 +1207,984 @@ Grammar exercises may later integrate with the Universal Practice Engine.
 
 # 31. Writing Practice
 
+The Writing Practice system provides a structured environment for students to practice academic and creative writing from **Nursery and Prep through Class 12**.
+
+The architecture must support:
+
+```text
+Writing Prompt
+      ↓
+Writing Workspace
+      ↓
+Draft / Submit
+      ↓
+Self Review
+      ↓
+Evaluation
+      ↓
+Feedback
+      ↓
+Improvement
+      ↓
+Retry / New Attempt
+      ↓
+Student Writing Progress
+```
+
+Writing Practice must support teacher-created, platform-created, and future AI-assisted writing activities while keeping student submissions, evaluations, rubrics, and writing content logically separated.
+
+The system must support multiple attempts without overwriting previous student writing.
+
+---
+
 ## 31.1 writing_templates
+
+Stores reusable writing practice prompts and writing tasks.
 
 ```text
 id
+
 type
+
 title
-content
+
+prompt
+
+instructions
+
+model_answer
+
 grade_id
+
+subject_id
+
+chapter_id
+
+topic_id
+
+board_id
+
+academic_session_id
+
+language
+
+difficulty
+
+marks
+
+minimum_words
+
+maximum_words
+
+writing_rubric_id
+
+source_id
+
 status
+
+created_by
+
+reviewed_by
+
+published_at
+
 created_at
+
 updated_at
 ```
 
-Supported types:
+Supported writing types:
 
-* Essay
-* Letter
-* Application
-* Story
-* Dialogue
-* Paragraph
-* Summary
-* Report
-* Notice
-* Speech
+```text
+essay
 
-Writing activities may later use the same learning-progress and evaluation architecture as other practice experiences where appropriate.
+paragraph
+
+letter
+
+application
+
+story
+
+dialogue
+
+summary
+
+report
+
+notice
+
+speech
+
+descriptive
+
+creative
+
+comprehension
+
+short_answer
+
+long_answer
+```
+
+Writing templates may be associated with:
+
+```text
+Grade
+
+Subject
+
+Chapter
+
+Topic
+
+Board
+
+Academic Session
+
+Language
+
+Difficulty
+
+Rubric
+
+Source
+```
+
+### Writing Template Rules
+
+A writing template may contain:
+
+* Writing prompt
+* Instructions
+* Model answer
+* Word-count requirements
+* Marks
+* Difficulty
+* Academic classification
+* Writing type
+* Evaluation rubric
+
+The `model_answer` is reference material and must not be exposed to the student before the appropriate learning or evaluation stage.
+
+Writing templates should support:
+
+```text
+draft
+
+published
+
+archived
+```
+
+or an equivalent controlled status strategy.
+
+Only approved and published writing templates should normally become available to students.
 
 ---
+
+## 31.2 writing_attempts
+
+Stores individual student writing attempts.
+
+Each submission must remain a separate historical record.
+
+```text
+id
+
+writing_template_id
+
+student_id
+
+attempt_number
+
+content
+
+word_count
+
+character_count
+
+status
+
+self_review
+
+improved_from_attempt_id
+
+started_at
+
+submitted_at
+
+reviewed_at
+
+created_at
+
+updated_at
+```
+
+Supported statuses:
+
+```text
+draft
+
+submitted
+
+reviewed
+```
+
+### Multiple Attempt Architecture
+
+A student may attempt the same writing task multiple times.
+
+Example:
+
+```text
+Writing Template
+      ↓
+Attempt 1
+      ↓
+Review
+      ↓
+Attempt 2
+      ↓
+Improved Writing
+      ↓
+Attempt 3
+```
+
+Previous attempts must never be overwritten.
+
+The `improved_from_attempt_id` field allows an improved attempt to reference the previous attempt from which it was developed.
+
+Example:
+
+```text
+Attempt 1
+improved_from_attempt_id = NULL
+
+Attempt 2
+improved_from_attempt_id = Attempt 1
+
+Attempt 3
+improved_from_attempt_id = Attempt 2
+```
+
+This creates a complete improvement history.
+
+### Writing Workspace Data
+
+The writing workspace should support:
+
+* Writing area
+* Word count
+* Character count
+* Clear/reset
+* Save draft
+* Submit
+* Previous prompt
+* Next prompt
+* Self-review
+
+Word and character counts may be calculated by the application and stored with the attempt for historical reporting and analytics.
+
+---
+
+## 31.3 writing_evaluations
+
+Stores evaluation results for student writing attempts.
+
+```text
+id
+
+writing_attempt_id
+
+evaluator_type
+
+evaluator_id
+
+content_score
+
+grammar_score
+
+vocabulary_score
+
+organization_score
+
+spelling_score
+
+relevance_score
+
+overall_score
+
+feedback
+
+strengths
+
+improvements
+
+status
+
+evaluated_at
+
+created_at
+
+updated_at
+```
+
+Supported evaluator types:
+
+```text
+teacher
+
+ai
+
+system
+```
+
+The `evaluator_id` may reference a platform user where applicable.
+
+For system-generated or AI-generated evaluations where no user account exists, `evaluator_id` may remain nullable.
+
+Evaluation statuses may include:
+
+```text
+pending
+
+completed
+
+revised
+```
+
+or an equivalent controlled status strategy.
+
+### Evaluation Criteria
+
+Writing evaluation should be capable of assessing:
+
+```text
+Content
+
+Grammar
+
+Vocabulary
+
+Organization
+
+Spelling
+
+Relevance
+
+Overall Performance
+```
+
+The architecture must remain ready for both manual teacher evaluation and future AI-assisted evaluation.
+
+AI evaluation must not automatically be treated as authoritative teacher assessment unless the product explicitly defines that behavior.
+
+---
+
+## 31.4 writing_rubrics
+
+Stores reusable writing evaluation rubrics.
+
+```text
+id
+
+title
+
+description
+
+grade_id
+
+subject_id
+
+writing_type
+
+status
+
+created_at
+
+updated_at
+```
+
+Rubrics allow different academic levels and writing types to use different evaluation criteria.
+
+Examples:
+
+```text
+Class 5 Essay Rubric
+
+Class 8 Paragraph Rubric
+
+Class 9 Letter Writing Rubric
+
+Class 10 Application Rubric
+
+Class 11 English Essay Rubric
+
+Class 12 Creative Writing Rubric
+```
+
+A rubric may be associated with a writing template through:
+
+```text
+writing_templates.writing_rubric_id
+```
+
+This allows the same rubric to be reused across multiple writing tasks.
+
+---
+
+## 31.5 writing_rubric_items
+
+Stores individual criteria within a writing rubric.
+
+```text
+id
+
+writing_rubric_id
+
+criterion
+
+description
+
+maximum_marks
+
+sort_order
+
+created_at
+
+updated_at
+```
+
+Example rubric:
+
+```text
+Writing Rubric
+      │
+      ├── Content
+      ├── Grammar
+      ├── Vocabulary
+      ├── Organization
+      ├── Spelling
+      └── Relevance
+```
+
+Each rubric item may define:
+
+* Criterion
+* Description
+* Maximum marks
+* Evaluation order
+
+This prevents evaluation criteria from being hard-coded into the application.
+
+---
+
+## 31.6 Writing Practice Relationships
+
+The primary relationship is:
+
+```text
+Academic Structure
+      ↓
+Writing Template
+      │
+      ├── Prompt
+      ├── Instructions
+      ├── Model Answer
+      ├── Difficulty
+      ├── Marks
+      └── Rubric
+             ↓
+      Student Writing Attempt
+             │
+             ├── Draft
+             ├── Submit
+             ├── Word Count
+             ├── Character Count
+             └── Self Review
+                    ↓
+              Evaluation
+                    │
+                    ├── Teacher
+                    ├── AI
+                    └── System
+                    ↓
+                 Feedback
+                    ↓
+               Improvement
+                    ↓
+              New Attempt
+```
+
+---
+
+## 31.7 Writing Practice and Student Learning
+
+Writing Practice should integrate with the existing learning architecture.
+
+Conceptually:
+
+```text
+Student
+   ↓
+Writing Practice
+   ↓
+writing_attempts
+   ↓
+writing_evaluations
+   ↓
+Feedback / Score
+   ↓
+learning_activities
+   ↓
+Student Progress
+```
+
+Writing activity records may contribute to:
+
+```text
+Student Progress
+
+Learning History
+
+Topic Practice
+
+Subject Progress
+
+Recommendation System
+
+Weak Area Detection
+
+Revision Queue
+```
+
+Writing Practice must not unnecessarily create duplicate student-learning systems.
+
+---
+
+## 31.8 Writing History
+
+The application should be capable of displaying a student's writing history.
+
+Writing history may include:
+
+```text
+Date
+
+Topic
+
+Writing Type
+
+Attempt Number
+
+Word Count
+
+Status
+
+Score
+
+Improvement Status
+```
+
+Example:
+
+```text
+Essay: My Best Friend
+Attempt 1
+Score: 62%
+
+Essay: My Best Friend
+Attempt 2
+Score: 78%
+
+Essay: My Best Friend
+Attempt 3
+Score: 88%
+```
+
+Historical attempts must remain available according to the platform's data-retention and privacy policies.
+
+---
+
+## 31.9 Self Review
+
+Students may perform a self-review before or after submission.
+
+The `self_review` field may store structured self-reflection data.
+
+Possible self-review areas include:
+
+```text
+Did I answer the topic?
+
+Did I follow the instructions?
+
+Did I check grammar?
+
+Did I check spelling?
+
+Did I organize my writing?
+
+Did I use appropriate vocabulary?
+
+Did I meet the required word count?
+```
+
+Self-review is student-generated information and must remain separate from teacher, AI, or system evaluation.
+
+---
+
+## 31.10 Model Answers and Learning Guidance
+
+Writing templates may contain:
+
+```text
+Model Answer
+
+Important Points
+
+Writing Instructions
+
+Common Mistakes
+
+Improvement Guidance
+```
+
+Where these elements are stored as part of the writing-template or related educational content architecture, they must be controlled according to the student's learning stage.
+
+The model answer must not be automatically displayed before submission when doing so would undermine the intended writing practice.
+
+The system should encourage students to produce their own writing before viewing reference material.
+
+---
+
+## 31.11 Writing Difficulty
+
+Writing tasks may use:
+
+```text
+easy
+
+medium
+
+hard
+```
+
+Difficulty must remain data-driven rather than hard-coded by class.
+
+Difficulty may later be used by:
+
+```text
+Practice Selection
+
+Student Recommendations
+
+Weak Area Detection
+
+Adaptive Learning
+
+AI Recommendations
+```
+
+---
+
+## 31.12 Writing Language Support
+
+The Writing Practice architecture must support multilingual educational content.
+
+The `language` field may identify the primary language of the writing task.
+
+The architecture should remain ready for:
+
+```text
+English
+
+Urdu
+
+Roman Urdu
+
+Other supported languages
+```
+
+Language-specific evaluation rules may be introduced later without redesigning the writing database.
+
+---
+
+## 31.13 AI Writing Assistant Readiness
+
+The database must remain ready for future AI-assisted writing evaluation.
+
+Future AI capabilities may include:
+
+```text
+Grammar Error Detection
+
+Spelling Detection
+
+Vocabulary Suggestions
+
+Sentence Improvement
+
+Organization Feedback
+
+Content Relevance
+
+Rubric Evaluation
+
+Writing Strengths
+
+Writing Weaknesses
+
+Improvement Suggestions
+```
+
+The AI Writing Assistant should function primarily as a learning assistant.
+
+It should not simply replace the student's writing task by automatically producing the complete answer whenever the intended activity is student writing practice.
+
+AI-generated evaluation must remain distinguishable from:
+
+```text
+Teacher Evaluation
+
+System Evaluation
+```
+
+through `evaluator_type`.
+
+---
+
+## 31.14 Writing Progress
+
+The platform should be capable of calculating student writing progress from historical attempts and evaluations.
+
+Possible progress indicators include:
+
+```text
+Total Writings
+
+Completed Writings
+
+Average Score
+
+Writing Streak
+
+Average Word Count
+
+Grammar Improvement
+
+Vocabulary Improvement
+
+Organization Improvement
+
+Spelling Improvement
+
+Content Improvement
+
+Overall Improvement
+```
+
+These values should preferably be derived from historical writing attempts and evaluations rather than duplicated unnecessarily as permanent fields.
+
+---
+
+## 31.15 Writing Practice and Revision
+
+Writing weaknesses may contribute to the existing revision architecture.
+
+Conceptually:
+
+```text
+Writing Evaluation
+       ↓
+Weak Area
+       ↓
+Student Recommendation / Revision Queue
+       ↓
+Additional Writing Practice
+       ↓
+New Attempt
+       ↓
+Improvement Measurement
+```
+
+For example:
+
+```text
+Repeated Grammar Weakness
+        ↓
+Grammar Practice
+
+Weak Vocabulary
+        ↓
+Vocabulary Practice
+
+Poor Organization
+        ↓
+Structured Writing Practice
+```
+
+Writing Practice should therefore integrate with the existing personalization architecture without creating a separate revision system.
+
+---
+
+## 31.16 Writing Practice and Learning Activities
+
+Writing Practice may be recorded through the existing `learning_activities` architecture.
+
+Example:
+
+```text
+learning_activities
+
+student_id
+activity_type = Writing
+resource_type = writing_attempt
+resource_id = writing_attempts.id
+started_at
+completed_at
+duration_seconds
+metadata
+```
+
+The exact implementation may use the existing activity architecture rather than introducing a duplicate writing-activity history table.
+
+---
+
+## 31.17 Writing Data Integrity Rules
+
+The Writing Practice system must enforce:
+
+```text
+A writing attempt must belong to a valid writing template.
+
+A writing attempt must belong to a valid student.
+
+Attempt numbers must remain logically ordered.
+
+Previous attempts must never be overwritten.
+
+Improved attempts must reference valid previous attempts.
+
+Evaluations must belong to valid writing attempts.
+
+Rubric items must belong to valid rubrics.
+
+Writing templates must reference valid academic entities where applicable.
+
+Model answers must not be exposed before the appropriate stage.
+
+Student writing must be access-controlled.
+
+Teacher evaluations must be access-controlled.
+
+AI evaluations must remain distinguishable from teacher evaluations.
+```
+
+Foreign keys and application-level validation must work together to maintain integrity.
+
+---
+
+## 31.18 Writing Practice and Privacy
+
+Student writing may contain personally identifiable or sensitive information.
+
+Access must therefore be restricted according to the user's role and permissions.
+
+Students should normally access their own writing attempts.
+
+Teachers should only access writing belonging to students/classes they are authorized to evaluate.
+
+Administrative access must follow the platform's authorization policies.
+
+Writing content must not be exposed through unauthorized APIs, logs, debugging output, or public endpoints.
+
+---
+
+## 31.19 Writing Practice and Future Assignments
+
+The Writing Practice architecture should remain reusable by the future Assignment system.
+
+Conceptually:
+
+```text
+Writing Template
+      ↓
+Assignment
+      ↓
+Student Writing Attempt
+      ↓
+Writing Evaluation
+```
+
+The Assignment system should reuse writing attempts and evaluations where appropriate instead of creating a separate writing-submission architecture.
+
+---
+
+## 31.20 Writing Practice Core Principle
+
+The Writing Practice system must separate:
+
+```text
+Writing Task
+
+Student Attempt
+
+Evaluation
+
+Rubric
+
+Feedback
+
+Progress
+```
+
+The architecture must preserve historical attempts and support continuous improvement.
+
+The core learning cycle is:
+
+```text
+Prompt
+  ↓
+Write
+  ↓
+Submit
+  ↓
+Review
+  ↓
+Improve
+  ↓
+Retry
+  ↓
+Measure Progress
+```
+
+Writing Practice is therefore a reusable learning system rather than a simple collection of model answers.
+
+It must remain compatible with the existing:
+
+```text
+Question Bank
+
+Universal Practice Engine
+
+Learning Activities
+
+Student Progress
+
+Recommendations
+
+Revision Queue
+
+AI System
+
+Teacher System
+
+Assignment System
+```
+
+without unnecessarily duplicating existing educational architecture.
 
 # 32. Practicals & Activities
 

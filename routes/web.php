@@ -18,6 +18,7 @@ use App\Http\Controllers\TestAttemptController;
 use App\Http\Controllers\TestQuestionController;
 use App\Http\Controllers\TestResultController;
 use App\Http\Controllers\TestSubmissionController;
+use App\Http\Controllers\WritingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -358,6 +359,141 @@ Route::post(
         'verified',
     ])
     ->name('flashcards.progress.store');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Practice Routes
+|--------------------------------------------------------------------------
+|
+| T047 Enhanced Writing Practice.
+|
+| Student flow:
+|
+| Writing List
+|     -> Writing Prompt
+|     -> Start Writing
+|     -> Save Draft
+|     -> Submit
+|     -> Review
+|     -> Improve
+|     -> Retry
+|
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Writing Practice Index
+|--------------------------------------------------------------------------
+|
+| Displays published writing templates.
+|
+*/
+
+Route::get(
+    '/writing',
+    [WritingController::class, 'index']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.index');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Prompt
+|--------------------------------------------------------------------------
+|
+| Displays a published writing prompt.
+|
+*/
+
+Route::get(
+    '/writing/{writingTemplate}',
+    [WritingController::class, 'show']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.show');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Start
+|--------------------------------------------------------------------------
+|
+| Starts or resumes the authenticated student's writing attempt.
+|
+*/
+
+Route::get(
+    '/writing/{writingTemplate}/start',
+    [WritingController::class, 'start']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.start');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Draft Save
+|--------------------------------------------------------------------------
+|
+| Saves the authenticated student's writing as a draft.
+|
+*/
+
+Route::post(
+    '/writing/{writingTemplate}',
+    [WritingController::class, 'store']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.store');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Attempt Review
+|--------------------------------------------------------------------------
+|
+| Displays the authenticated student's submitted writing attempt
+| for review and future improvement workflow.
+|
+*/
+
+Route::get(
+    '/writing/attempts/{attempt}',
+    [WritingController::class, 'showAttempt']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.attempts.show');
+
+/*
+|--------------------------------------------------------------------------
+| Writing Attempt Submission
+|--------------------------------------------------------------------------
+|
+| Submits the authenticated student's writing attempt.
+|
+*/
+
+Route::post(
+    '/writing/attempts/{attempt}/submit',
+    [WritingController::class, 'submit']
+)
+    ->middleware([
+        'auth',
+        'verified',
+    ])
+    ->name('writing.attempts.submit');
 
 /*
 |--------------------------------------------------------------------------
