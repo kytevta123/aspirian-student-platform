@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 
 const subjects = [
-  { name: "Physics", color: "#2E6F95" },
+  { name: "Physics Subject", color: "#2E6F95" },
   { name: "Chemistry", color: "#2FBF8F" },
   { name: "Biology", color: "#FF6B57" },
   { name: "Math", color: "#FFC93C" },
