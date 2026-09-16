@@ -29,7 +29,7 @@ The existing WordPress website will continue to focus on:
 
 ### New Student Platform
 
-**https://app.aspirian.pk**
+**https://student.aspirian.pk**
 
 The new standalone application will focus on:
 
