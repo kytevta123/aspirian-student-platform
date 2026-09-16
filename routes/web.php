@@ -698,3 +698,20 @@ Route::delete(
         'verified',
     ])
     ->name('tests.questions.destroy');
+
+    /*
+|--------------------------------------------------------------------------
+| Viva Module Routes
+|--------------------------------------------------------------------------
+|
+| T048 Viva Module.
+|
+| Viva Index (subject/topic selection)
+|     -> Start Session
+|     -> Show Question
+|     -> Submit Answer
+|     -> Complete Session
+|     -> Result
+|     -> History
+|
+*/
