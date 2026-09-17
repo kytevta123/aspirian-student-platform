@@ -29,7 +29,7 @@ The existing WordPress website will continue to focus on:
 
 ### New Student Platform
 
-**https://app.aspirian.pk**
+**https://student.aspirian.pk**
 
 The new standalone application will focus on:
 
@@ -121,6 +121,16 @@ Aspirian will follow these principles:
 
 Structured educational content for:
 
+* Nursery
+* Prep
+* Class 1
+* Class 2
+* Class 3
+* Class 4
+* Class 5
+* Class 6
+* Class 7
+* Class 8
 * Class 9
 * Class 10
 * Class 11
@@ -128,13 +138,16 @@ Structured educational content for:
 
 Initial subjects include:
 
+* English
+* Urdu
+* Tarjam-tul-Quran
+* Islamiat
+* Mutalia Pakistan 
 * Computer Science
 * Physics
 * Chemistry
 * Biology
 * Mathematics
-* English
-* Urdu
 
 The architecture will support additional subjects, classes, boards, and academic levels.
 
