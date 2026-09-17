@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Sparkles,
   BookOpen,
@@ -8,11 +7,11 @@ import {
   Layers,
   PenLine,
   ArrowRight,
-  Menu,
-  X,
   CheckCircle2,
   Flame,
 } from "lucide-react";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 
 // ===== Aspirian Brand Palette (from aspirian.pk) =====
 const C = {
@@ -120,8 +119,6 @@ function FloatingCard({ icon: Icon, label, color, className }) {
 }
 
 export default function AspirianHomepage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <div style={{ fontFamily: "Inter, sans-serif", color: C.ink }} className="min-h-screen bg-white">
       <style>{`
@@ -133,57 +130,7 @@ export default function AspirianHomepage() {
         .float-slowest { animation: floatY 5s ease-in-out infinite; animation-delay: 2s; }
       `}</style>
 
-      {/* NAV */}
-      <header className="sticky top-0 z-30 border-b" style={{ borderColor: "#0000000f", backgroundColor: `${C.white}E6` }}>
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: C.coral }}>
-              <Sparkles size={18} color="white" />
-            </div>
-            <span className="font-display text-xl font-bold" style={{ color: C.navy }}>Aspirian</span>
-          </div>
-
-          <nav className="hidden items-center gap-8 md:flex">
-            {["Subjects", "AI Tutor", "Test Bank", "Pricing"].map((item) => (
-              <a key={item} href="#" className="text-sm font-semibold transition" style={{ color: `${C.ink}B3` }}>
-                {item}
-              </a>
-            ))}
-          </nav>
-
-          <div className="hidden items-center gap-3 md:flex">
-            <a href="#" className="text-sm font-bold" style={{ color: C.navy }}>Log in</a>
-            <a
-              href="#"
-              className="rounded-full px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90"
-              style={{ backgroundColor: C.coral }}
-            >
-              Start free
-            </a>
-          </div>
-
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {menuOpen && (
-          <div className="border-t px-6 py-4 md:hidden" style={{ borderColor: "#0000000f" }}>
-            {["Subjects", "AI Tutor", "Test Bank", "Pricing", "Log in"].map((item) => (
-              <a key={item} href="#" className="block py-2 text-sm font-semibold" style={{ color: `${C.ink}CC` }}>
-                {item}
-              </a>
-            ))}
-            <a
-              href="#"
-              className="mt-2 block rounded-full px-5 py-2.5 text-center text-sm font-bold text-white"
-              style={{ backgroundColor: C.coral }}
-            >
-              Start free
-            </a>
-          </div>
-        )}
-      </header>
+      <Header />
 
       {/* HERO */}
       <section
@@ -344,18 +291,7 @@ export default function AspirianHomepage() {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="px-6 py-10" style={{ backgroundColor: C.navyDark }}>
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 text-sm text-white/50 md:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg" style={{ backgroundColor: C.coral }}>
-              <Sparkles size={14} color="white" />
-            </div>
-            <span className="font-display font-bold text-white">Aspirian</span>
-          </div>
-          <p>© 2026 Aspirian Student Platform. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

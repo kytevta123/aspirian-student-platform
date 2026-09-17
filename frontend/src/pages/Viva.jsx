@@ -11,6 +11,8 @@ import {
   MessageCircleQuestion,
   Trophy,
 } from "lucide-react";
+import Header from "../components/Header.jsx";
+import Footer from "../components/Footer.jsx";
 
 const API_BASE = "https://api-student.aspirian.pk/api";
 
@@ -142,6 +144,7 @@ export default function Viva() {
 
   return (
     <div style={{ fontFamily: "Inter, sans-serif", color: C.ink }} className="min-h-screen bg-white">
+      <Header />
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
         .font-display { font-family: 'Baloo 2', sans-serif; }
@@ -312,6 +315,7 @@ export default function Viva() {
           </button>
         </section>
       )}
+      <Footer />
     </div>
   );
 }
