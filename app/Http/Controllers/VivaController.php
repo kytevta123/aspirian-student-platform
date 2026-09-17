@@ -59,22 +59,39 @@ class VivaController extends Controller
         ]);
     }
 
-    /**
-     * Submit an answer for the current question.
+        /**
+     * Submit an answer for the current question (text, audio, or video).
      */
     public function submitAnswer(Request $request, VivaSession $vivaSession)
     {
         $validated = $request->validate([
             'question_id' => 'required|exists:questions,id',
-            'answer_text' => 'required|string',
+            'answer_type' => 'required|in:text,audio,video',
+            'answer_text' => 'nullable|string',
+            'media' => 'nullable|file|mimes:mp3,wav,webm,ogg,mp4,mov,m4a,aac|max:20480', // 20MB max
             'duration_seconds' => 'nullable|integer',
         ]);
+
+        $mediaPath = null;
+        $mimeType = null;
+        $fileSize = null;
+
+        if ($request->hasFile('media')) {
+            $file = $request->file('media');
+            $mediaPath = $file->store('viva-responses', 'public');
+            $mimeType = $file->getMimeType();
+            $fileSize = $file->getSize();
+        }
 
         $response = VivaResponse::create([
             'viva_session_id' => $vivaSession->id,
             'question_id' => $validated['question_id'],
             'sequence' => $vivaSession->responses()->count() + 1,
-            'answer_text' => $validated['answer_text'],
+            'answer_type' => $validated['answer_type'],
+            'answer_text' => $validated['answer_text'] ?? null,
+            'media_path' => $mediaPath,
+            'mime_type' => $mimeType,
+            'file_size' => $fileSize,
             'answered_at' => now(),
             'duration_seconds' => $validated['duration_seconds'] ?? null,
         ]);

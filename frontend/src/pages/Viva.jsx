@@ -6,13 +6,13 @@ import {
   Clock,
   CheckCircle2,
   RotateCcw,
-  Send,
   Loader2,
   MessageCircleQuestion,
   Trophy,
 } from "lucide-react";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
+import Recorder from "../components/Recorder.jsx";
 
 const API_BASE = "https://api-student.aspirian.pk/api";
 
@@ -32,12 +32,13 @@ const C = {
 };
 
 async function api(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
   const res = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers: {
-      "Content-Type": "application/json",
       Accept: "application/json",
       Authorization: `Bearer ${TEMP_TOKEN}`,
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     },
   });
@@ -78,7 +79,6 @@ export default function Viva() {
   const [stage, setStage] = useState("hero");
   const [session, setSession] = useState(null);
   const [question, setQuestion] = useState(null);
-  const [answer, setAnswer] = useState("");
   const [elapsed, setElapsed] = useState(0);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -102,7 +102,6 @@ export default function Viva() {
       setSession(newSession);
       setQuestion(data.question);
       setElapsed(0);
-      setAnswer("");
       setStage("active");
     } catch (e) {
       setError("Could not start viva. Please try again.");
@@ -110,18 +109,33 @@ export default function Viva() {
     }
   }
 
-  async function submitAnswer() {
-    if (!answer.trim() || !question) return;
+  async function submitAnswer({ answerType, text, blob, durationSeconds }) {
+    if (!question) return;
     setStage("submitting");
     try {
-      await api(`/viva/${session.id}/answer`, {
-        method: "POST",
-        body: JSON.stringify({
-          question_id: question.id,
-          answer_text: answer,
-          duration_seconds: elapsed,
-        }),
-      });
+      if (answerType === "text") {
+        await api(`/viva/${session.id}/answer`, {
+          method: "POST",
+          body: JSON.stringify({
+            question_id: question.id,
+            answer_type: "text",
+            answer_text: text,
+            duration_seconds: durationSeconds,
+          }),
+        });
+      } else {
+        const formData = new FormData();
+        formData.append("question_id", question.id);
+        formData.append("answer_type", answerType);
+        formData.append("duration_seconds", durationSeconds);
+        const ext = answerType === "video" ? "webm" : "webm";
+        formData.append("media", blob, `answer.${ext}`);
+
+        await api(`/viva/${session.id}/answer`, {
+          method: "POST",
+          body: formData,
+        });
+      }
       await api(`/viva/${session.id}/complete`, { method: "POST" });
       const full = await api(`/viva/${session.id}/result`);
       setResult(full);
@@ -136,7 +150,6 @@ export default function Viva() {
     setStage("hero");
     setSession(null);
     setQuestion(null);
-    setAnswer("");
     setElapsed(0);
     setResult(null);
     setError(null);
@@ -244,34 +257,9 @@ export default function Viva() {
                 {question.question_text}
               </p>
 
-              <textarea
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-                placeholder="Type your answer as if you were saying it out loud…"
-                rows={6}
-                disabled={stage === "submitting"}
-                className="mt-6 w-full resize-none rounded-2xl border-2 p-4 text-base outline-none transition"
-                style={{ borderColor: "#EAF1F8", color: C.ink }}
-                onFocus={(e) => (e.target.style.borderColor = C.teal)}
-                onBlur={(e) => (e.target.style.borderColor = "#EAF1F8")}
-              />
-
-              <button
-                onClick={submitAnswer}
-                disabled={!answer.trim() || stage === "submitting"}
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-full py-3.5 text-base font-bold text-white transition disabled:opacity-40"
-                style={{ backgroundColor: C.teal }}
-              >
-                {stage === "submitting" ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" /> Submitting…
-                  </>
-                ) : (
-                  <>
-                    Submit Answer <Send size={16} />
-                  </>
-                )}
-              </button>
+              <div className="mt-6">
+                <Recorder onSubmit={submitAnswer} submitting={stage === "submitting"} />
+              </div>
             </div>
 
             {error && <p className="mt-3 text-center text-sm font-semibold" style={{ color: "#FF8A80" }}>{error}</p>}
