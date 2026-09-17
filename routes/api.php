@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\VivaController;
+use App\Http\Controllers\PracticalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,14 @@ Route::middleware('auth:sanctum')->prefix('viva')->group(function () {
     Route::post('/{vivaSession}/complete', [VivaController::class, 'complete'])->name('viva.complete');
     Route::get('/{vivaSession}/result', [VivaController::class, 'result'])->name('viva.result');
     Route::get('/history', [VivaController::class, 'history'])->name('viva.history');
+});
+
+Route::middleware('auth:sanctum')->prefix('practicals')->group(function () {
+    Route::get('/', [PracticalController::class, 'index'])->name('practicals.index');
+    Route::get('/history', [PracticalController::class, 'history'])->name('practicals.history');
+    Route::get('/{practical}', [PracticalController::class, 'show'])->name('practicals.show');
+    Route::post('/{practical}/start', [PracticalController::class, 'start'])->name('practicals.start');
+    Route::post('/submissions/{submission}/acknowledge-safety', [PracticalController::class, 'acknowledgeSafety'])->name('practicals.acknowledge');
+    Route::post('/submissions/{submission}/submit', [PracticalController::class, 'submit'])->name('practicals.submit');
+    Route::get('/submissions/{submission}', [PracticalController::class, 'showSubmission'])->name('practicals.submission.show');
 });
