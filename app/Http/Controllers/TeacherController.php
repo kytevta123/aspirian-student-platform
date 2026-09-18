@@ -41,18 +41,94 @@ class TeacherController extends Controller
         return response()->json($students);
     }
 
-    /**
-     * List questions in the Question Bank.
+        /**
+     * List/search questions in the Question Bank.
      */
     public function questions(Request $request)
     {
         $this->authorizeTeacher($request);
 
-        $questions = Question::when($request->topic_id, fn($q) => $q->where('topic_id', $request->topic_id))
+        $questions = Question::query()
+            ->when($request->topic_id, fn($q) => $q->where('topic_id', $request->topic_id))
+            ->when($request->difficulty, fn($q) => $q->where('difficulty', $request->difficulty))
+            ->when($request->question_type, fn($q) => $q->where('question_type', $request->question_type))
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->search, fn($q) => $q->where('question_text', 'like', '%' . $request->search . '%'))
             ->latest()
             ->paginate(20);
 
         return response()->json($questions);
+    }
+
+    /**
+     * Create a new question (starts as draft).
+     */
+    public function storeQuestion(Request $request)
+    {
+        $this->authorizeTeacher($request);
+
+        $validated = $request->validate([
+            'topic_id' => 'required|exists:topics,id',
+            'question_type' => 'required|string',
+            'question_text' => 'required|string',
+            'options' => 'nullable|array',
+            'answer' => 'nullable|string',
+            'explanation' => 'nullable|string',
+            'marks' => 'required|integer|min:1',
+            'difficulty' => 'required|string',
+        ]);
+
+        $validated['status'] = 'draft';
+        $question = Question::create($validated);
+
+        return response()->json($question, 201);
+    }
+
+    /**
+     * Update an existing question.
+     */
+    public function updateQuestion(Request $request, Question $question)
+    {
+        $this->authorizeTeacher($request);
+
+        $validated = $request->validate([
+            'topic_id' => 'sometimes|exists:topics,id',
+            'question_type' => 'sometimes|string',
+            'question_text' => 'sometimes|string',
+            'options' => 'nullable|array',
+            'answer' => 'nullable|string',
+            'explanation' => 'nullable|string',
+            'marks' => 'sometimes|integer|min:1',
+            'difficulty' => 'sometimes|string',
+        ]);
+
+        $question->update($validated);
+
+        return response()->json($question);
+    }
+
+    /**
+     * Publish a question (draft -> published).
+     */
+    public function publishQuestion(Request $request, Question $question)
+    {
+        $this->authorizeTeacher($request);
+
+        $question->update(['status' => 'published']);
+
+        return response()->json($question);
+    }
+
+    /**
+     * Archive/delete a question (soft delete).
+     */
+    public function deleteQuestion(Request $request, Question $question)
+    {
+        $this->authorizeTeacher($request);
+
+        $question->delete();
+
+        return response()->json(['message' => 'Question deleted.']);
     }
 
     /**
