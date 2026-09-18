@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\VivaController;
 use App\Http\Controllers\PracticalController;
+use App\Http\Controllers\TeacherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,13 @@ Route::middleware('auth:sanctum')->prefix('practicals')->group(function () {
     Route::post('/submissions/{submission}/acknowledge-safety', [PracticalController::class, 'acknowledgeSafety'])->name('practicals.acknowledge');
     Route::post('/submissions/{submission}/submit', [PracticalController::class, 'submit'])->name('practicals.submit');
     Route::get('/submissions/{submission}', [PracticalController::class, 'showSubmission'])->name('practicals.submission.show');
+});
+
+Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
+    Route::get('/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
+    Route::get('/students', [TeacherController::class, 'students'])->name('teacher.students');
+    Route::get('/questions', [TeacherController::class, 'questions'])->name('teacher.questions');
+    Route::get('/tests', [TeacherController::class, 'tests'])->name('teacher.tests');
+    Route::get('/results', [TeacherController::class, 'results'])->name('teacher.results');
+    Route::get('/reports', [TeacherController::class, 'reports'])->name('teacher.reports');
 });
