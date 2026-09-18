@@ -20,6 +20,7 @@ export default function Footer() {
         <nav className="flex flex-wrap items-center justify-center gap-4">
           <Link to="/" className="hover:text-white">Home</Link>
           <Link to="/viva" className="hover:text-white">Viva Practice</Link>
+          <Link to="/practicals" className="hover:text-white">Practicals</Link>
           <a href="#" className="hover:text-white">Privacy Policy</a>
           <a href="#" className="hover:text-white">Terms</a>
         </nav>

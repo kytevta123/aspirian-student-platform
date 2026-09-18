@@ -13,6 +13,7 @@ const navLinks = [
   { label: "Subjects", to: "/#subjects" },
   { label: "AI Tutor", to: "/#ai-tutor" },
   { label: "Viva Practice", to: "/viva" },
+  { label: "Practicals", to: "/practicals" },
   { label: "Test Bank", to: "/#tests" },
 ];
 
