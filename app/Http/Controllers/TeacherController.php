@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Question;
 use App\Models\Test;
 use App\Models\TestAttempt;
+use App\Models\TestAssignment;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -179,5 +180,110 @@ class TeacherController extends Controller
             'completion_rate' => $totalAttempts > 0 ? round(($completedAttempts / $totalAttempts) * 100, 1) : 0,
             'average_score' => $averageScore ? round($averageScore, 1) : null,
         ]);
+    }
+
+        /**
+     * Create a new test (draft, using existing questions).
+     */
+    public function storeTest(Request $request)
+    {
+        $this->authorizeTeacher($request);
+
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'instructions' => 'nullable|string',
+            'duration' => 'required|integer|min:1',
+            'question_ids' => 'required|array|min:1',
+            'question_ids.*' => 'exists:questions,id',
+        ]);
+
+        $test = Test::create([
+            'title' => $validated['title'],
+            'instructions' => $validated['instructions'] ?? null,
+            'duration' => $validated['duration'],
+            'marks' => Question::whereIn('id', $validated['question_ids'])->sum('marks'),
+            'status' => 'draft',
+        ]);
+
+        foreach ($validated['question_ids'] as $i => $qId) {
+            $question = Question::find($qId);
+            $test->questions()->attach($qId, [
+                'sort_order' => $i + 1,
+                'marks' => $question->marks,
+            ]);
+        }
+
+        return response()->json($test->load('questions'), 201);
+    }
+
+    /**
+     * Publish a test (draft -> published).
+     */
+    public function publishTest(Request $request, Test $test)
+    {
+        $this->authorizeTeacher($request);
+
+        $test->update(['status' => 'published', 'published_at' => now()]);
+
+        return response()->json($test);
+    }
+
+    /**
+     * Assign a test to one or more students, with an optional availability window.
+     */
+    public function assignTest(Request $request, Test $test)
+    {
+        $this->authorizeTeacher($request);
+
+        $validated = $request->validate([
+            'student_ids' => 'required|array|min:1',
+            'student_ids.*' => 'exists:users,id',
+            'start_at' => 'nullable|date',
+            'end_at' => 'nullable|date|after:start_at',
+        ]);
+
+        $assignments = [];
+        foreach ($validated['student_ids'] as $studentId) {
+            $assignments[] = TestAssignment::updateOrCreate(
+                ['test_id' => $test->id, 'student_id' => $studentId],
+                [
+                    'assigned_by' => $request->user()->id,
+                    'start_at' => $validated['start_at'] ?? null,
+                    'end_at' => $validated['end_at'] ?? null,
+                ]
+            );
+        }
+
+        return response()->json($assignments, 201);
+    }
+
+    /**
+     * View attempts for a specific test.
+     */
+    public function testAttempts(Request $request, Test $test)
+    {
+        $this->authorizeTeacher($request);
+
+        $attempts = TestAttempt::with('user')
+            ->where('test_id', $test->id)
+            ->latest()
+            ->paginate(20);
+
+        return response()->json($attempts);
+    }
+
+    /**
+     * View results for a specific test.
+     */
+    public function testResults(Request $request, Test $test)
+    {
+        $this->authorizeTeacher($request);
+
+        $results = \App\Models\TestResult::with('user')
+            ->where('test_id', $test->id)
+            ->latest()
+            ->paginate(20);
+
+        return response()->json($results);
     }
 }

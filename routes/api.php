@@ -41,4 +41,9 @@ Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::put('/questions/{question}', [TeacherController::class, 'updateQuestion'])->name('teacher.questions.update');
     Route::post('/questions/{question}/publish', [TeacherController::class, 'publishQuestion'])->name('teacher.questions.publish');
     Route::delete('/questions/{question}', [TeacherController::class, 'deleteQuestion'])->name('teacher.questions.delete');
+    Route::post('/tests', [TeacherController::class, 'storeTest'])->name('teacher.tests.store');
+    Route::post('/tests/{test}/publish', [TeacherController::class, 'publishTest'])->name('teacher.tests.publish');
+    Route::post('/tests/{test}/assign', [TeacherController::class, 'assignTest'])->name('teacher.tests.assign');
+    Route::get('/tests/{test}/attempts', [TeacherController::class, 'testAttempts'])->name('teacher.tests.attempts');
+    Route::get('/tests/{test}/results', [TeacherController::class, 'testResults'])->name('teacher.tests.results');
 });
