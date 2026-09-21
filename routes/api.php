@@ -46,4 +46,5 @@ Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::post('/tests/{test}/assign', [TeacherController::class, 'assignTest'])->name('teacher.tests.assign');
     Route::get('/tests/{test}/attempts', [TeacherController::class, 'testAttempts'])->name('teacher.tests.attempts');
     Route::get('/tests/{test}/results', [TeacherController::class, 'testResults'])->name('teacher.tests.results');
+    Route::get('/tests/{test}/assignments', [TeacherController::class, 'testAssignments'])->name('teacher.tests.assignments');
 });

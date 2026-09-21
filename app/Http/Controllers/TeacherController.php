@@ -286,4 +286,19 @@ class TeacherController extends Controller
 
         return response()->json($results);
     }
+
+        /**
+     * List students a test has been assigned to.
+     */
+    public function testAssignments(Request $request, Test $test)
+    {
+        $this->authorizeTeacher($request);
+
+        $assignments = TestAssignment::with('student')
+            ->where('test_id', $test->id)
+            ->latest()
+            ->get();
+
+        return response()->json($assignments);
+    }
 }

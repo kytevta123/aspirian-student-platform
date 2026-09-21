@@ -96,7 +96,7 @@ Aspirian will follow these principles:
                                 │
               ┌─────────────────┴─────────────────┐
               │                                   │
-       ASPIRIAN.PK                         APP.ASPIRIAN.PK
+       ASPIRIAN.PK                         STUDENT.ASPIRIAN.PK
        WordPress Website                   Student Platform
               │                                   │
        SEO & Public Content                  Student Dashboard
@@ -975,7 +975,7 @@ aspirian.pk
     ↓
 Existing WordPress Website
 
-app.aspirian.pk
+student.aspirian.pk
     ↓
 New Student Platform
 
@@ -1193,7 +1193,7 @@ All within the Aspirian ecosystem.
 
 **Project Name:** Aspirian Student Platform
 
-**Primary Application:** `app.aspirian.pk`
+**Primary Application:** `student.aspirian.pk`
 
 **Existing Website:** `aspirian.pk`
 
