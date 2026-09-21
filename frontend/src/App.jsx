@@ -3,6 +3,7 @@ import Home from './pages/Home.jsx';
 import Viva from './pages/Viva.jsx';
 import Practicals from './pages/Practicals.jsx';
 import TeacherDashboard from './pages/TeacherDashboard.jsx';
+import SchoolDashboard from './pages/SchoolDashboard.jsx';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/viva" element={<Viva />} />
         <Route path="/practicals" element={<Practicals />} />
         <Route path="/teacher" element={<TeacherDashboard />} />
+        <Route path="/school" element={<SchoolDashboard />} />
       </Routes>
     </BrowserRouter>
   );
