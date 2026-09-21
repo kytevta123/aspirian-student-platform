@@ -3,6 +3,8 @@
 use App\Http\Controllers\VivaController;
 use App\Http\Controllers\PracticalController;
 use App\Http\Controllers\TeacherController;
+use App\Http\Controllers\SchoolController;
+use App\Models\School;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,3 +50,12 @@ Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::get('/tests/{test}/results', [TeacherController::class, 'testResults'])->name('teacher.tests.results');
     Route::get('/tests/{test}/assignments', [TeacherController::class, 'testAssignments'])->name('teacher.tests.assignments');
 });
+
+Route::middleware('auth:sanctum')->prefix('school')->group(function () {
+    Route::get('/{school}', [SchoolController::class, 'overview'])->name('school.overview');
+    Route::get('/{school}/students', [SchoolController::class, 'students'])->name('school.students');
+    Route::get('/{school}/teachers', [SchoolController::class, 'teachers'])->name('school.teachers');
+    Route::get('/{school}/classes', [SchoolController::class, 'classes'])->name('school.classes');
+    Route::get('/{school}/performance', [SchoolController::class, 'performance'])->name('school.performance');
+});
+
