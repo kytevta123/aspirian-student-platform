@@ -57,5 +57,11 @@ Route::middleware('auth:sanctum')->prefix('school')->group(function () {
     Route::get('/{school}/teachers', [SchoolController::class, 'teachers'])->name('school.teachers');
     Route::get('/{school}/classes', [SchoolController::class, 'classes'])->name('school.classes');
     Route::get('/{school}/performance', [SchoolController::class, 'performance'])->name('school.performance');
+    Route::post('/{school}/students', [SchoolController::class, 'storeStudent'])->name('school.students.store');
+    Route::patch('/students/{student}/status', [SchoolController::class, 'updateStudentStatus'])->name('school.students.status');
+    Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('school.teachers.store');
+    Route::patch('/users/{user}/status', [SchoolController::class, 'updateUserStatus'])->name('school.users.status');
+    Route::post('/users/{user}/roles', [SchoolController::class, 'assignRole'])->name('school.users.roles.assign');
+    Route::delete('/users/{user}/roles/{roleId}', [SchoolController::class, 'removeRole'])->name('school.users.roles.remove');
 });
 
