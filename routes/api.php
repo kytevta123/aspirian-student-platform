@@ -55,13 +55,19 @@ Route::middleware('auth:sanctum')->prefix('school')->group(function () {
     Route::get('/{school}', [SchoolController::class, 'overview'])->name('school.overview');
     Route::get('/{school}/students', [SchoolController::class, 'students'])->name('school.students');
     Route::get('/{school}/teachers', [SchoolController::class, 'teachers'])->name('school.teachers');
+
+    // Class management
     Route::get('/{school}/classes', [SchoolController::class, 'classes'])->name('school.classes');
+    Route::post('/{school}/classes', [SchoolController::class, 'storeClass'])->name('school.classes.store');
+
     Route::get('/{school}/performance', [SchoolController::class, 'performance'])->name('school.performance');
+
     Route::post('/{school}/students', [SchoolController::class, 'storeStudent'])->name('school.students.store');
     Route::patch('/students/{student}/status', [SchoolController::class, 'updateStudentStatus'])->name('school.students.status');
+
     Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('school.teachers.store');
     Route::patch('/users/{user}/status', [SchoolController::class, 'updateUserStatus'])->name('school.users.status');
+
     Route::post('/users/{user}/roles', [SchoolController::class, 'assignRole'])->name('school.users.roles.assign');
     Route::delete('/users/{user}/roles/{roleId}', [SchoolController::class, 'removeRole'])->name('school.users.roles.remove');
 });
-

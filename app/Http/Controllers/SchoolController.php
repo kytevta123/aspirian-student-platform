@@ -87,10 +87,54 @@ class SchoolController extends Controller
         $this->authorizeSchoolAdmin($request);
 
         $classes = SchoolClass::where('school_id', $school->id)
-            ->with('grade')
+            ->with(['grade', 'academicSession'])
             ->paginate(20);
 
         return response()->json($classes);
+    }
+
+    /**
+     * Create a new class for this school.
+     */
+    public function storeClass(Request $request, School $school)
+    {
+        $this->authorizeSchoolAdmin($request);
+
+        $validated = $request->validate([
+            'grade_id' => [
+                'required',
+                'integer',
+                'exists:grades,id',
+            ],
+            'academic_session_id' => [
+                'required',
+                'integer',
+                'exists:academic_sessions,id',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'status' => [
+                'nullable',
+                'string',
+                'in:active,inactive',
+            ],
+        ]);
+
+        $schoolClass = SchoolClass::create([
+            'school_id' => $school->id,
+            'grade_id' => $validated['grade_id'],
+            'academic_session_id' => $validated['academic_session_id'],
+            'name' => $validated['name'],
+            'status' => $validated['status'] ?? 'active',
+        ]);
+
+        return response()->json(
+            $schoolClass->load(['grade', 'academicSession']),
+            201
+        );
     }
 
     /**
