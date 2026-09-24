@@ -1,4 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 import Home from './pages/Home.jsx';
 import Viva from './pages/Viva.jsx';
 import Practicals from './pages/Practicals.jsx';
@@ -10,6 +13,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/viva" element={<Viva />} />
         <Route path="/practicals" element={<Practicals />} />
         <Route path="/teacher" element={<TeacherDashboard />} />
