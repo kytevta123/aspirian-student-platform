@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-const API_BASE = "https://api-student.aspirian.pk/api";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { API_ROOT_URL, xsrfHeaders } from "../api";
 
 function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [form, setForm] = useState({
     email: "",
@@ -40,7 +40,7 @@ function Login() {
        * Get the Sanctum CSRF cookie before making the login request.
        */
       const csrfResponse = await fetch(
-        `${API_BASE.replace("/api", "")}/sanctum/csrf-cookie`,
+        `${API_ROOT_URL}/sanctum/csrf-cookie`,
         {
           method: "GET",
           credentials: "include",
@@ -58,12 +58,13 @@ function Login() {
        * Step 2:
        * Send login credentials using the Laravel web session.
        */
-      const loginResponse = await fetch(`${API_BASE.replace("/api", "")}/login`, {
+      const loginResponse = await fetch(`${API_ROOT_URL}/login`, {
         method: "POST",
         credentials: "include",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
+          ...xsrfHeaders(),
         },
         body: JSON.stringify({
           email: form.email,
@@ -100,7 +101,7 @@ function Login() {
        * The authenticated user/session will be handled
        * by the frontend auth layer in the next T009 step.
        */
-      navigate("/");
+      navigate(location.state?.from || "/", { replace: true });
     } catch (err) {
       setError(
         err?.message || "Something went wrong. Please try again."

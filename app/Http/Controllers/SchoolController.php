@@ -3,13 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\GradeSubject;
 use App\Models\School;
 use App\Models\SchoolClass;
 use App\Models\Student;
 use App\Models\StudentClassEnrollment;
+use App\Models\Subject;
+use App\Models\Test;
+use App\Models\TestAttempt;
 use App\Models\TestResult;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SchoolController extends Controller
 {
@@ -162,6 +167,271 @@ class SchoolController extends Controller
             'average_percentage' => $averagePercentage
                 ? round($averagePercentage, 1)
                 : null,
+        ]);
+    }
+
+    public function studentReports(Request $request, School $school)
+    {
+        $this->authorizeSchoolAdmin($request);
+
+        $students = Student::query()
+            ->whereHas('classEnrollments.schoolClass', function ($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->with([
+                'user',
+                'classEnrollments' => function ($query) use ($school) {
+                    $query->whereHas('schoolClass', function ($classQuery) use ($school) {
+                        $classQuery->where('school_id', $school->id);
+                    })->with('schoolClass');
+                },
+            ])
+            ->get();
+
+        $userIds = $students->pluck('user_id')->filter()->unique();
+        $resultStats = TestResult::query()
+            ->whereIn('user_id', $userIds)
+            ->selectRaw('user_id, COUNT(*) as total_tests, AVG(percentage) as average_percentage')
+            ->groupBy('user_id')
+            ->get()
+            ->keyBy('user_id');
+
+        $data = $students->map(function (Student $student) use ($resultStats) {
+            $stats = $resultStats->get($student->user_id);
+
+            return [
+                'id' => $student->id,
+                'student_id' => $student->id,
+                'name' => $student->user?->name,
+                'email' => $student->user?->email,
+                'status' => $student->status,
+                'class_name' => $student->classEnrollments
+                    ->pluck('schoolClass.name')
+                    ->filter()
+                    ->unique()
+                    ->implode(', '),
+                'total_tests' => (int) ($stats->total_tests ?? 0),
+                'average_percentage' => $stats
+                    ? round((float) $stats->average_percentage, 1)
+                    : null,
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'total' => $data->count(),
+        ]);
+    }
+
+    public function classReports(Request $request, School $school)
+    {
+        $this->authorizeSchoolAdmin($request);
+
+        $classes = SchoolClass::query()
+            ->where('school_id', $school->id)
+            ->with('grade')
+            ->orderBy('name')
+            ->get();
+        $classIds = $classes->pluck('id');
+
+        $enrollmentStats = StudentClassEnrollment::query()
+            ->whereIn('school_class_id', $classIds)
+            ->where('status', 'active')
+            ->selectRaw('school_class_id, COUNT(DISTINCT student_id) as total_students')
+            ->groupBy('school_class_id')
+            ->get()
+            ->keyBy('school_class_id');
+
+        $resultStats = DB::table('test_results')
+            ->join('students', 'students.user_id', '=', 'test_results.user_id')
+            ->join('student_class_enrollments as enrollments', 'enrollments.student_id', '=', 'students.id')
+            ->whereIn('enrollments.school_class_id', $classIds)
+            ->whereNull('enrollments.deleted_at')
+            ->selectRaw('enrollments.school_class_id, COUNT(DISTINCT test_results.id) as total_tests_taken, AVG(test_results.percentage) as average_percentage')
+            ->groupBy('enrollments.school_class_id')
+            ->get()
+            ->keyBy('school_class_id');
+
+        $data = $classes->map(function (SchoolClass $schoolClass) use ($enrollmentStats, $resultStats) {
+            $enrollment = $enrollmentStats->get($schoolClass->id);
+            $results = $resultStats->get($schoolClass->id);
+
+            return [
+                'id' => $schoolClass->id,
+                'name' => $schoolClass->name,
+                'grade' => $schoolClass->grade?->name,
+                'total_students' => (int) ($enrollment->total_students ?? 0),
+                'total_tests_taken' => (int) ($results->total_tests_taken ?? 0),
+                'average_percentage' => $results?->average_percentage !== null
+                    ? round((float) $results->average_percentage, 1)
+                    : null,
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'total' => $data->count(),
+        ]);
+    }
+
+    public function subjectReports(Request $request, School $school)
+    {
+        $this->authorizeSchoolAdmin($request);
+
+        $gradeIds = SchoolClass::query()
+            ->where('school_id', $school->id)
+            ->pluck('grade_id')
+            ->unique();
+
+        $subjects = Subject::query()
+            ->whereHas('gradeSubjects', function ($query) use ($gradeIds) {
+                $query->whereIn('grade_id', $gradeIds)
+                    ->where('status', 'active');
+            })
+            ->orderBy('name')
+            ->get();
+
+        $studentUserIds = Student::query()
+            ->whereHas('classEnrollments.schoolClass', function ($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->pluck('user_id');
+
+        $data = $subjects->map(function (Subject $subject) use ($studentUserIds) {
+            $testIds = DB::table('test_questions as test_questions')
+                ->join('questions', 'questions.id', '=', 'test_questions.question_id')
+                ->join('topics', 'topics.id', '=', 'questions.topic_id')
+                ->join('chapters', 'chapters.id', '=', 'topics.chapter_id')
+                ->join('books', 'books.id', '=', 'chapters.book_id')
+                ->where('books.subject_id', $subject->id)
+                ->whereNull('questions.deleted_at')
+                ->whereNull('topics.deleted_at')
+                ->whereNull('chapters.deleted_at')
+                ->whereNull('books.deleted_at')
+                ->distinct()
+                ->pluck('test_questions.test_id');
+
+            $results = TestResult::query()
+                ->whereIn('test_id', $testIds)
+                ->whereIn('user_id', $studentUserIds);
+
+            $totalResults = (clone $results)->count();
+            $average = (clone $results)->avg('percentage');
+
+            return [
+                'id' => $subject->id,
+                'name' => $subject->name,
+                'total_tests' => $testIds->count(),
+                'total_results' => $totalResults,
+                'average_percentage' => $average !== null
+                    ? round((float) $average, 1)
+                    : null,
+            ];
+        })->values();
+
+        return response()->json([
+            'data' => $data,
+            'total' => $data->count(),
+        ]);
+    }
+
+    public function testReports(Request $request, School $school)
+    {
+        $this->authorizeSchoolAdmin($request);
+
+        $studentUserIds = Student::query()
+            ->whereHas('classEnrollments.schoolClass', function ($query) use ($school) {
+                $query->where('school_id', $school->id);
+            })
+            ->pluck('user_id');
+
+        $assignedTestIds = DB::table('test_assignments as assignments')
+            ->join('students', 'students.user_id', '=', 'assignments.student_id')
+            ->join('student_class_enrollments as enrollments', 'enrollments.student_id', '=', 'students.id')
+            ->join('school_classes', 'school_classes.id', '=', 'enrollments.school_class_id')
+            ->where('school_classes.school_id', $school->id)
+            ->whereNull('enrollments.deleted_at')
+            ->pluck('assignments.test_id');
+
+        $resultTestIds = TestResult::query()
+            ->whereIn('user_id', $studentUserIds)
+            ->pluck('test_id');
+        $testIds = $assignedTestIds->merge($resultTestIds)->unique()->values();
+
+        $attemptStats = TestAttempt::query()
+            ->whereIn('test_id', $testIds)
+            ->whereIn('user_id', $studentUserIds)
+            ->selectRaw('test_id, COUNT(*) as total_attempts')
+            ->groupBy('test_id')
+            ->get()
+            ->keyBy('test_id');
+
+        $resultStats = TestResult::query()
+            ->whereIn('test_id', $testIds)
+            ->whereIn('user_id', $studentUserIds)
+            ->selectRaw('test_id, COUNT(*) as total_results, AVG(percentage) as average_percentage, SUM(CASE WHEN status = ? THEN 1 ELSE 0 END) as passed_results', [TestResult::STATUS_PASSED])
+            ->groupBy('test_id')
+            ->get()
+            ->keyBy('test_id');
+
+        $subjectNames = DB::table('test_questions as test_questions')
+            ->join('questions', 'questions.id', '=', 'test_questions.question_id')
+            ->join('topics', 'topics.id', '=', 'questions.topic_id')
+            ->join('chapters', 'chapters.id', '=', 'topics.chapter_id')
+            ->join('books', 'books.id', '=', 'chapters.book_id')
+            ->join('subjects', 'subjects.id', '=', 'books.subject_id')
+            ->whereIn('test_questions.test_id', $testIds)
+            ->whereNull('questions.deleted_at')
+            ->whereNull('topics.deleted_at')
+            ->whereNull('chapters.deleted_at')
+            ->whereNull('books.deleted_at')
+            ->select('test_questions.test_id', 'subjects.name')
+            ->distinct()
+            ->get()
+            ->groupBy('test_id')
+            ->map(fn ($rows) => $rows->pluck('name')->implode(', '));
+
+        $classNames = DB::table('test_assignments as assignments')
+            ->join('students', 'students.user_id', '=', 'assignments.student_id')
+            ->join('student_class_enrollments as enrollments', 'enrollments.student_id', '=', 'students.id')
+            ->join('school_classes', 'school_classes.id', '=', 'enrollments.school_class_id')
+            ->where('school_classes.school_id', $school->id)
+            ->whereIn('assignments.test_id', $testIds)
+            ->whereNull('enrollments.deleted_at')
+            ->select('assignments.test_id', 'school_classes.name')
+            ->distinct()
+            ->get()
+            ->groupBy('test_id')
+            ->map(fn ($rows) => $rows->pluck('name')->implode(', '));
+
+        $data = Test::query()
+            ->whereIn('id', $testIds)
+            ->orderBy('title')
+            ->get()
+            ->map(function (Test $test) use ($attemptStats, $resultStats, $subjectNames, $classNames) {
+                $results = $resultStats->get($test->id);
+                $totalResults = (int) ($results->total_results ?? 0);
+
+                return [
+                    'id' => $test->id,
+                    'title' => $test->title,
+                    'class_name' => $classNames->get($test->id, '—'),
+                    'subject' => $subjectNames->get($test->id, '—'),
+                    'attempts' => (int) ($attemptStats->get($test->id)->total_attempts ?? 0),
+                    'average_percentage' => $results?->average_percentage !== null
+                        ? round((float) $results->average_percentage, 1)
+                        : null,
+                    'pass_rate' => $totalResults > 0
+                        ? round(((int) $results->passed_results / $totalResults) * 100, 1)
+                        : null,
+                    'status' => $test->status,
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'data' => $data,
+            'total' => $data->count(),
         ]);
     }
 

@@ -12,6 +12,12 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+/*
+|--------------------------------------------------------------------------
+| Viva Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth:sanctum')->prefix('viva')->group(function () {
     Route::get('/', [VivaController::class, 'index'])->name('viva.index');
     Route::post('/start', [VivaController::class, 'start'])->name('viva.start');
@@ -21,6 +27,12 @@ Route::middleware('auth:sanctum')->prefix('viva')->group(function () {
     Route::get('/{vivaSession}/result', [VivaController::class, 'result'])->name('viva.result');
     Route::get('/history', [VivaController::class, 'history'])->name('viva.history');
 });
+
+/*
+|--------------------------------------------------------------------------
+| Practical Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::middleware('auth:sanctum')->prefix('practicals')->group(function () {
     Route::get('/', [PracticalController::class, 'index'])->name('practicals.index');
@@ -32,6 +44,12 @@ Route::middleware('auth:sanctum')->prefix('practicals')->group(function () {
     Route::get('/submissions/{submission}', [PracticalController::class, 'showSubmission'])->name('practicals.submission.show');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Teacher Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::get('/profile', [TeacherController::class, 'profile'])->name('teacher.profile');
     Route::get('/students', [TeacherController::class, 'students'])->name('teacher.students');
@@ -39,10 +57,12 @@ Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::get('/tests', [TeacherController::class, 'tests'])->name('teacher.tests');
     Route::get('/results', [TeacherController::class, 'results'])->name('teacher.results');
     Route::get('/reports', [TeacherController::class, 'reports'])->name('teacher.reports');
+
     Route::post('/questions', [TeacherController::class, 'storeQuestion'])->name('teacher.questions.store');
     Route::put('/questions/{question}', [TeacherController::class, 'updateQuestion'])->name('teacher.questions.update');
     Route::post('/questions/{question}/publish', [TeacherController::class, 'publishQuestion'])->name('teacher.questions.publish');
     Route::delete('/questions/{question}', [TeacherController::class, 'deleteQuestion'])->name('teacher.questions.delete');
+
     Route::post('/tests', [TeacherController::class, 'storeTest'])->name('teacher.tests.store');
     Route::post('/tests/{test}/publish', [TeacherController::class, 'publishTest'])->name('teacher.tests.publish');
     Route::post('/tests/{test}/assign', [TeacherController::class, 'assignTest'])->name('teacher.tests.assign');
@@ -51,23 +71,108 @@ Route::middleware('auth:sanctum')->prefix('teacher')->group(function () {
     Route::get('/tests/{test}/assignments', [TeacherController::class, 'testAssignments'])->name('teacher.tests.assignments');
 });
 
+/*
+|--------------------------------------------------------------------------
+| School Routes
+|--------------------------------------------------------------------------
+*/
+
 Route::middleware('auth:sanctum')->prefix('school')->group(function () {
-    Route::get('/{school}', [SchoolController::class, 'overview'])->name('school.overview');
-    Route::get('/{school}/students', [SchoolController::class, 'students'])->name('school.students');
-    Route::get('/{school}/teachers', [SchoolController::class, 'teachers'])->name('school.teachers');
 
-    // Class management
-    Route::get('/{school}/classes', [SchoolController::class, 'classes'])->name('school.classes');
-    Route::post('/{school}/classes', [SchoolController::class, 'storeClass'])->name('school.classes.store');
+    /*
+    |--------------------------------------------------------------------------
+    | School Overview
+    |--------------------------------------------------------------------------
+    */
 
-    Route::get('/{school}/performance', [SchoolController::class, 'performance'])->name('school.performance');
+    Route::get('/{school}', [SchoolController::class, 'overview'])
+        ->name('school.overview');
 
-    Route::post('/{school}/students', [SchoolController::class, 'storeStudent'])->name('school.students.store');
-    Route::patch('/students/{student}/status', [SchoolController::class, 'updateStudentStatus'])->name('school.students.status');
+    /*
+    |--------------------------------------------------------------------------
+    | Students
+    |--------------------------------------------------------------------------
+    */
 
-    Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])->name('school.teachers.store');
-    Route::patch('/users/{user}/status', [SchoolController::class, 'updateUserStatus'])->name('school.users.status');
+    Route::get('/{school}/students', [SchoolController::class, 'students'])
+        ->name('school.students');
 
-    Route::post('/users/{user}/roles', [SchoolController::class, 'assignRole'])->name('school.users.roles.assign');
-    Route::delete('/users/{user}/roles/{roleId}', [SchoolController::class, 'removeRole'])->name('school.users.roles.remove');
+    Route::post('/{school}/students', [SchoolController::class, 'storeStudent'])
+        ->name('school.students.store');
+
+    Route::patch('/students/{student}/status', [SchoolController::class, 'updateStudentStatus'])
+        ->name('school.students.status');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Teachers
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/{school}/teachers', [SchoolController::class, 'teachers'])
+        ->name('school.teachers');
+
+    Route::post('/{school}/teachers', [SchoolController::class, 'storeTeacher'])
+        ->name('school.teachers.store');
+
+    Route::patch('/users/{user}/status', [SchoolController::class, 'updateUserStatus'])
+        ->name('school.users.status');
+
+    /*
+    |--------------------------------------------------------------------------
+    | Classes
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/{school}/classes', [SchoolController::class, 'classes'])
+        ->name('school.classes');
+
+    Route::post('/{school}/classes', [SchoolController::class, 'storeClass'])
+        ->name('school.classes.store');
+
+    /*
+    |--------------------------------------------------------------------------
+    | School Performance
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/{school}/performance', [SchoolController::class, 'performance'])
+        ->name('school.performance');
+
+    /*
+    |--------------------------------------------------------------------------
+    | School Reports
+    |--------------------------------------------------------------------------
+    |
+    | These endpoints provide school-specific reporting data for:
+    | - Students
+    | - Classes
+    | - Subjects
+    | - Tests
+    |
+    */
+
+    Route::get('/{school}/reports/students', [SchoolController::class, 'studentReports'])
+        ->name('school.reports.students');
+
+    Route::get('/{school}/reports/classes', [SchoolController::class, 'classReports'])
+        ->name('school.reports.classes');
+
+    Route::get('/{school}/reports/subjects', [SchoolController::class, 'subjectReports'])
+        ->name('school.reports.subjects');
+
+    Route::get('/{school}/reports/tests', [SchoolController::class, 'testReports'])
+        ->name('school.reports.tests');
+
+    /*
+    |--------------------------------------------------------------------------
+    | User Roles
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/users/{user}/roles', [SchoolController::class, 'assignRole'])
+        ->name('school.users.roles.assign');
+
+    Route::delete('/users/{user}/roles/{roleId}', [SchoolController::class, 'removeRole'])
+        ->name('school.users.roles.remove');
 });
